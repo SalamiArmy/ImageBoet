@@ -6,6 +6,6 @@ if [ -e "./lib/Scenic-Oxygen" ]; then
 else
 	git -C lib clone https://github.com/salamiarmy/Scenic-Oxygen
 fi
-cp -n "lib/Scenic-Oxygen/." ./
+cp -r -n "lib/Scenic-Oxygen/." ./
 "[[GoogleCloudSDKInstallation]]/Google/Cloud SDK/google-cloud-sdk/bin/gcloud.cmd" app deploy app.yaml --project [[GoogleAppEngineProjectName]]
 "[[PythonInstallation]]/python.exe" "[[GooglePythonAppEngineSDKInstallation]]/Google/google_appengine/appcfg.py" update_cron "./" --application [[GoogleAppEngineProjectName]]
