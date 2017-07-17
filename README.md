@@ -19,8 +19,9 @@ OPTIONAL:
 5. Update the rest of keys.ini with keys for each command you want to use.
 6. Copy pre-push to the .git\hooks folder.
 7. In .git\hooks\pre-push change were it says [[PythonInstallation]] to your Python install location in bash notation (e.g. /C/Python27) and your 
-8. In .git\hooks\pre-push change were it says [[GoogleCloudSDKInstallation]] to your Google Cloud SDK install locaiton in bash notation (e.g. /C/Program Files (x86))
-9. Now when you push it will automagicly build and deploy ImageBoet to the cloud! To the hindenpeter!
+8. In .git\hooks\pre-push change were it says [[GoogleCloudSDKInstallation]] to your Google Cloud SDK install location in bash notation (e.g. /C/Program Files (x86))
+9. In .git\hooks\pre-push change were it says [[GoogleAppEngineProjectName]] to your Google App Engine Project ID in bash notation (e.g. /C/Program Files (x86))
+10. Now when you push it will automagicly build and deploy ImageBoet to the cloud! To the hindenpeter!
 
 In lib\SoundCloud\Client.py set enable_ssl = False (Unsupported by Google App Engine)
 oh ja, /launch command needs a module called "dateutil" clone from https://github.com/dateutil/dateutil and copy the folder "dateutil" into lib.
