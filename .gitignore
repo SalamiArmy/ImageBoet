@@ -1,0 +1,26 @@
+keys.ini
+.travis.yaml
+.idea
+lib/
+adapt/
+mcstatus/
+
+# Moved to Scenic-Oxygen
+debughost.cmd
+favicon.ico
+host.json
+index.yaml
+main.py
+.travis.yaml.template
+_config.yml
+app.yaml
+appengine_config.py
+Bot.sln
+bot_keys.ini
+bot_keys.ini.template
+commands.json
+cron.yaml
+integration_tests/
+messages/
+PostDeployScripts/
+www/

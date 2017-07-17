@@ -1,0 +1,11 @@
+#!/bin/sh
+
+[[PythonInstallation]]\scripts\pip.exe install -t lib python-telegram-bot bs4 xmltodict six soundcloud feedparser requests tungsten mcstatus google-api-python-client
+if [ -e "./lib/Scenic-Oxygen" ]; then
+	git -C lib clone https://github.com/salamiarmy/Scenic-Oxygen
+else
+	git -C lib/Scenic-Oxygen pull
+fi
+cp -n "lib/Scenic-Oxygen/." ./
+"[[GoogleCloudSDKInstallation]]/Google/Cloud SDK/google-cloud-sdk/bin/gcloud.cmd" app deploy app.yaml --project [[GoogleAppEngineProjectName]]
+"[[PythonInstallation]]/python.exe" "[[GooglePythonAppEngineSDKInstallation]]/Google/google_appengine/appcfg.py" update_cron "./" --application [[GoogleAppEngineProjectName]]
