@@ -24,3 +24,5 @@ integration_tests/
 messages/
 PostDeployScripts/
 www/
+commands/login.py
+commands/start.py
