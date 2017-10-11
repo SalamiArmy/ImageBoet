@@ -1,5 +1,5 @@
 # coding=utf-8
-from commands import getgif
+import maingetgif = main.load_code_as_module('getgif')
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):

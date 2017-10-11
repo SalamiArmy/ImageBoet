@@ -2,7 +2,7 @@
 
 from google.appengine.ext import ndb
 
-from commands import get
+import mainget = main.load_code_as_module('get')
 
 CommandName = 'getxxx'
 

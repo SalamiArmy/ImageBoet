@@ -3,7 +3,6 @@ from threading import Thread
 import json
 import string
 import urllib
-import main
 
 import sys
 
@@ -12,6 +11,7 @@ import io
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 
+import main
 retry_on_telegram_error = main.load_code_as_module('retry_on_telegram_error')
 
 CommandName = 'get'

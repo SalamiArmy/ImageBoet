@@ -1,6 +1,6 @@
 # coding=utf-8
 import main
-from commands import getgif
+import maingetgif = main.load_code_as_module('getgif')
 from commands import watch
 
 def run(bot, chat_id, user, keyConfig, message, num_to_send=1):

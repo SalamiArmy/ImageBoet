@@ -1,5 +1,5 @@
 # coding=utf-8
-from commands import get
+import mainget = main.load_code_as_module('get')
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
