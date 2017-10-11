@@ -23,6 +23,13 @@ OPTIONAL:
 9. In .git\hooks\pre-push change were it says [[GoogleAppEngineProjectName]] to your Google App Engine Project ID in bash notation (e.g. /C/Program Files (x86))
 10. Now when you push it will automagicly build and deploy ImageBoet to the cloud! To the hindenpeter!
 
+```bash
+git clone (url for your thorin fork) ~/bot
+cd ~/bot
+(PATH TO PYTHON27 INSTALL)\scripts\pip.exe install -t lib python-telegram-bot bs4 xmltodict six soundcloud feedparser requests tungsten mcstatus google-api-python-client
+(PATH TO GOOGLE APP ENGINE LAUNCHER INSTALL)appcfg.py -A {GOOGLE APP ENGINE PROJECT ID} update .
+```
+
 In lib\SoundCloud\Client.py set enable_ssl = False (Unsupported by Google App Engine)
 oh ja, /launch command needs a module called "dateutil" clone from https://github.com/dateutil/dateutil and copy the folder "dateutil" into lib.
 
