@@ -2,14 +2,11 @@
 import ConfigParser
 import unittest
 
-import sys
 import telegram
+from commands import add
 
-import commands.getgif as getgif
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
-
-import main
 
 
 class TestGet(unittest.TestCase):
@@ -33,9 +30,15 @@ class TestGet(unittest.TestCase):
         requestText = 'tonguing asshole'
 
         keyConfig = ConfigParser.ConfigParser()
-        keyConfig.read(["keys.ini", "..\keys.ini"])
-        bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-        chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
+        keyConfig.read(['bot_keys.ini', '..\\bot_keys.ini'])
+        bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+        chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        getgif.setPreviouslySeenGifsValue(chatId, '')
-        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
+        _code_file = open('../commands/retry_on_telegram_error.py').read()
+        add.setCommandCode('retry_on_telegram_error', _code_file)
+        add.setCommandCode('get', open('../commands/get.py').read())
+
+        keyConfig.read(['keys.ini', '..\\keys.ini'])
+
+        import commands.getgif as getgif
+        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 10)

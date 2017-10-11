@@ -1,20 +1,22 @@
 # coding=utf-8
 import string
+from threading import Thread
 import urllib
 import io
+import main
 
 from google.appengine.ext import ndb
 
 import sys
 from PIL import Image
 
-from commands import retry_on_telegram_error
-from commands import get
+retry_on_telegram_error = main.load_code_as_module('retry_on_telegram_error')
+get = main.load_code_as_module('get')
 
 CommandName = 'getgif'
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
-    requestText = message.replace(bot.name, "").strip()
+    requestText = str(message).replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
             'searchType': "image",
@@ -76,12 +78,12 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalRe
                                               ', I\'m afraid I can\'t find a gif for ' +
                                               string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
 
-
 def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
                           total_sent=0, total_offset=0):
     offset_this_page = 0
     while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
         imagelink = data['items'][offset_this_page]['link']
+        print 'got image link ' + imagelink
         offset_this_page += 1
         total_offset += 1
         if '?' in imagelink:
@@ -89,10 +91,13 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         if not get.wasPreviouslySeenImage(chat_id, imagelink):
             get.addPreviouslySeenImagesValue(chat_id, imagelink)
             if is_valid_gif(imagelink):
-                ImageTags = get.Image_Tags(imagelink, keyConfig)
-                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText +
-                        (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '') +
-                        (' (I see ' + ImageTags + ')' if ImageTags != '' else '')):
+                if number == 1:
+                    if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
+                        total_sent += 1
+                    get.send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
+                else:
+                    message = requestText + ': ' + (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
+                    bot.sendMessage(chat_id, message)
                     total_sent += 1
     if int(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
@@ -100,3 +105,4 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
                                      total_sent, total_offset)
     return int(total_sent)
+

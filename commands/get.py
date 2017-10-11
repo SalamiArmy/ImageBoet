@@ -1,63 +1,62 @@
 # coding=utf-8
-import ConfigParser
+from threading import Thread
 import json
 import string
 import urllib
+import main
 
 import sys
 
 import io
 
-import telegram
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 
-from commands import retry_on_telegram_error
+retry_on_telegram_error = main.load_code_as_module('retry_on_telegram_error')
 
 CommandName = 'get'
 
-
-class SeenImages(ndb.Model):
-    # key name: get:str(chat_id)
-    allPreviousSeenImages = ndb.TextProperty(indexed=False, default='')
-
+class WhosSeenImageUrls(ndb.Model):
+    # key name: ImageUrl
+    whoseSeenImage = ndb.StringProperty(indexed=False, default='')
 
 # ================================
 
 def setPreviouslySeenImagesValue(chat_id, NewValue):
-    es = SeenImages.get_or_insert(CommandName + ':' + str(chat_id))
-    es.allPreviousSeenImages = NewValue.encode('utf-8')
+    es = WhosSeenImageUrls.get_or_insert(NewValue)
+    es.whoseSeenImage = str(chat_id)
     es.put()
 
 
 def addPreviouslySeenImagesValue(chat_id, NewValue):
-    es = SeenImages.get_or_insert(CommandName + ':' + str(chat_id))
-    if es.allPreviousSeenImages == '':
-        es.allPreviousSeenImages = NewValue.encode('utf-8')
+    es = WhosSeenImageUrls.get_or_insert(NewValue)
+    if es.whoseSeenImage == '':
+        es.whoseSeenImage = str(chat_id)
     else:
-        es.allPreviousSeenImages += ',' + NewValue.encode('utf-8')
+        es.whoseSeenImage += ',' + str(chat_id)
     es.put()
 
 
-def getPreviouslySeenImagesValue(chat_id):
-    es = SeenImages.get_or_insert(CommandName + ':' + str(chat_id))
+def getWhoseSeenImagesValue(image_link):
+    es = WhosSeenImageUrls.get_or_insert(image_link)
     if es:
-        return es.allPreviousSeenImages.encode('utf-8')
+        return es.whoseSeenImage.encode('utf-8')
     return ''
 
 
 def wasPreviouslySeenImage(chat_id, image_link):
-    allPreviousLinks = getPreviouslySeenImagesValue(chat_id)
-    if ',' + image_link + ',' in allPreviousLinks or \
-            allPreviousLinks.startswith(image_link + ',') or \
-            allPreviousLinks.endswith(',' + image_link) or \
-                    allPreviousLinks == image_link:
+    allWhoveSeenImage = getWhoseSeenImagesValue(image_link)
+    if ',' + str(chat_id) + ',' in allWhoveSeenImage or \
+            allWhoveSeenImage.startswith(str(chat_id) + ',') or \
+            allWhoveSeenImage.endswith(',' + str(chat_id)) or \
+                    allWhoveSeenImage == str(chat_id):
         return True
     return False
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
-    requestText = message.replace(bot.name, "").strip()
+    print message
+    requestText = str(message).replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_IMAGE_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
             'searchType': 'image',
@@ -115,7 +114,7 @@ def Image_Tags(imagelink, keyConfig):
                     "features":
                         [
                             {
-                                "type": "LABEL_DETECTION"
+                                "type": "WEB_DETECTION"
                             },
                             {
                                 "type": "SAFE_SEARCH_DETECTION"
@@ -138,42 +137,48 @@ def Image_Tags(imagelink, keyConfig):
             method='POST',
             headers={'Content-type': 'application/json'})
     except:
-        return 'nothing, I need to clean my glasses'
+        return ''
     visionData = json.loads(raw_data.content)
     if 'error' not in visionData:
         if 'error' not in visionData['responses'][0]:
+            webDetection = visionData['responses'][0]['webDetection']
             strAdult = visionData['responses'][0]['safeSearchAnnotation']['adult']
             if strAdult == 'POSSIBLE' or \
                 strAdult == 'LIKELY' or \
                 strAdult == 'VERY_LIKELY':
                 tags += strAdult.replace('VERY_LIKELY', '').lower() + ' obscene adult content, '
-            strViolence = visionData['responses'][0]['safeSearchAnnotation']['violence']
-            if strViolence == 'POSSIBLE' or \
-                strViolence == 'LIKELY' or \
-                strViolence == 'VERY_LIKELY':
-                tags += strViolence.replace('VERY_LIKELY', '').lower() + ' offensive violence, '
-            strMedical = visionData['responses'][0]['safeSearchAnnotation']['medical']
-            if strMedical == 'POSSIBLE' or \
-                strMedical == 'LIKELY' or \
-                strMedical == 'VERY_LIKELY':
-                tags += strMedical.replace('VERY_LIKELY', '').lower() + ' shocking medical content, '
-            strSpoof = visionData['responses'][0]['safeSearchAnnotation']['spoof']
-            if strSpoof == 'POSSIBLE' or \
-                strSpoof == 'LIKELY' or \
-                strSpoof == 'VERY_LIKELY':
-                strengthOfTag = strSpoof.replace('VERY_LIKELY', '').lower()
-                tags += 'a' + (' ' + strengthOfTag if strengthOfTag != '' else '') + ' meme, '
-            if 'labelAnnotations' in visionData['responses'][0]:
-                for tag in visionData['responses'][0]['labelAnnotations']:
-                    if (tag['description'] + ', ') not in tags:
-                        tags += tag['description'] + ', '
+            else:
+                strViolence = visionData['responses'][0]['safeSearchAnnotation']['violence']
+                if strViolence == 'POSSIBLE' or \
+                    strViolence == 'LIKELY' or \
+                    strViolence == 'VERY_LIKELY':
+                    tags += strViolence.replace('VERY_LIKELY', '').lower() + ' offensive violence, '
+                else:
+                    strMedical = visionData['responses'][0]['safeSearchAnnotation']['medical']
+                    if strMedical == 'POSSIBLE' or \
+                        strMedical == 'LIKELY' or \
+                        strMedical == 'VERY_LIKELY':
+                        tags += strMedical.replace('VERY_LIKELY', '').lower() + ' shocking medical content, '
+                    else:
+                        strSpoof = visionData['responses'][0]['safeSearchAnnotation']['spoof']
+                        if strSpoof == 'POSSIBLE' or \
+                            strSpoof == 'LIKELY' or \
+                            strSpoof == 'VERY_LIKELY':
+                            strengthOfTag = strSpoof.replace('VERY_LIKELY', '').lower()
+                            tags += 'a' + (' ' + strengthOfTag if strengthOfTag != '' else '') + ' meme, '
+            if ('webEntities' in webDetection):
+                for entity in webDetection['webEntities']:
+                    if 'description' in entity:
+                        tags += entity['description'].encode('utf-8') + ', '
         else:
             if visionData['responses'][0]['error']['message'][:10] == 'Image size' and visionData['responses'][0]['error']['message'][19:] == 'exceeding allowed max (4.00M).':
-                tags += 'nothing, image is too large ' + visionData['responses'][0]['error']['message'][11:18]
+                tags += 'doesn\'t look like anything to me, image is too large ' + visionData['responses'][0]['error']['message'][11:18]
             else:
                 print(visionData['responses'][0]['error']['message'])
     else:
         print(visionData['error']['message'])
+    if tags != '' and not tags.startswith('doesn\'t look like anything to me'):
+        tags = 'looks like: ' + tags
     return tags.rstrip(', ')
 
 def Send_Images(bot, chat_id, user, requestText, args, keyConfig, total_number_to_send=1):
@@ -204,7 +209,6 @@ def Send_Images(bot, chat_id, user, requestText, args, keyConfig, total_number_t
                                                   ', I\'m afraid I can\'t find any images for ' +
                                                   string.capwords(requestText.encode('utf-8')))
 
-
 def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
                           total_offset=0, total_sent=0):
     offset_this_page = 0
@@ -217,10 +221,15 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         if not wasPreviouslySeenImage(chat_id, imagelink):
             addPreviouslySeenImagesValue(chat_id, imagelink)
             if is_valid_image(imagelink):
-                ImageTags = Image_Tags(imagelink, keyConfig)
-                if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +
-                        (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '') +
-                        (' (I see ' + ImageTags + ')' if ImageTags != '' else '')):
+                if number == 1:
+                    if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +
+                            (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '')):
+                        total_sent += 1
+                    send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
+                else:
+                    message = requestText + ': ' + \
+                              (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
+                    bot.sendMessage(chat_id, message)
                     total_sent += 1
     if int(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
@@ -228,3 +237,11 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
                                      total_offset, total_sent)
     return total_offset, total_results, total_sent
+
+def send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText):
+    imagelink_str = str(imagelink)
+    image_tags = Image_Tags(imagelink_str, keyConfig)
+    bot.sendMessage(chat_id=chat_id, text=requestText +
+                                          (' ' + image_tags if image_tags != '' else '') +
+                                          '\n' + imagelink_str,
+                    disable_web_page_preview=True)
