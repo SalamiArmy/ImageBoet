@@ -1,7 +1,7 @@
 # coding=utf-8
 import main
-import maingetgif = main.load_code_as_module('getgif')
-from commands import watch
+getgif = main.load_code_as_module('getgif')
+watch = main.load_code_as_module('watch')
 
 def run(bot, chat_id, user, keyConfig, message, num_to_send=1):
     requestText = message.replace(bot.name, "").strip()
