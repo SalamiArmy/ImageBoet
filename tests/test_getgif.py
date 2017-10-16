@@ -27,7 +27,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_getgif(self):
-        requestText = 'tonguing asshole'
+        requestText = 'look ash likes the gays'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(['bot_keys.ini', '..\\bot_keys.ini'])
@@ -41,4 +41,4 @@ class TestGet(unittest.TestCase):
         keyConfig.read(['keys.ini', '..\\keys.ini'])
 
         import commands.getgif as getgif
-        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 10)
+        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 1)

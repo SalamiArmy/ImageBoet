@@ -1,10 +1,10 @@
 # coding=utf-8
-from threading import Thread
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 import json
 import string
 import urllib
-
-import sys
 
 import io
 
@@ -169,7 +169,7 @@ def Image_Tags(imagelink, keyConfig):
             if ('webEntities' in webDetection):
                 for entity in webDetection['webEntities']:
                     if 'description' in entity:
-                        tags += entity['description'].encode('utf-8') + ', '
+                        tags += str(entity['description']) + ', '
         else:
             if visionData['responses'][0]['error']['message'][:10] == 'Image size' and visionData['responses'][0]['error']['message'][19:] == 'exceeding allowed max (4.00M).':
                 tags += 'doesn\'t look like anything to me, image is too large ' + visionData['responses'][0]['error']['message'][11:18]
