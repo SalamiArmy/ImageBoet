@@ -2,10 +2,9 @@
 import string
 
 import main
+retry_on_telegram_error = main.load_code_as_module('retry_on_telegram_error')
 get = main.load_code_as_module('get')
-import main
 getgif = main.load_code_as_module('getgif')
-from commands import retry_on_telegram_error
 
 def run(bot, chat_id, user, keyConfig, message, num_to_send=1):
     requestText = str(message).replace(bot.name, "").strip()
