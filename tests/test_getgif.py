@@ -34,8 +34,7 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        _code_file = open('../commands/retry_on_telegram_error.py').read()
-        add.setCommandCode('retry_on_telegram_error', _code_file)
+        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
         add.setCommandCode('get', open('../commands/get.py').read())
 
         keyConfig.read(['keys.ini', '..\\keys.ini'])

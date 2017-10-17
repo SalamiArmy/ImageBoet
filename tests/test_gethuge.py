@@ -2,7 +2,7 @@ import ConfigParser
 import unittest
 import telegram
 
-import commands.gethuge as gethuge
+from commands import add
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
@@ -24,11 +24,15 @@ class TestGetHuge(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_gethuge(self):
-        requestText = 'Mr. Burgundy, you have a massive erection t-shirt'
+        requestText = 'longcat'
 
         keyConfig = ConfigParser.ConfigParser()
-        keyConfig.read(["keys.ini", "..\keys.ini"])
-        bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
-        chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
+        keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
+        bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+        chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        gethuge.run(bot, chatId, 'Admin', keyConfig, requestText, 8)
+        add.setCommandCode('get', open('../commands/get.py').read())
+        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
+        from commands import gethuge
+
+        gethuge.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
