@@ -41,7 +41,7 @@ def is_valid_gif(imagelink):
         except EOFError:
             pass
         else:
-            return int(sys.getsizeof(image_file)) < 10000000
+            return int(sys.getsizeof(image_file)) < 10000000 and get.ImageHasUniqueHashDigest(image_file.getvalue())
     finally:
         try:
             if gif:
