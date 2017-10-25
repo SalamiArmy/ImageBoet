@@ -69,7 +69,7 @@ def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, r
             xlink = item['link']
             if is_valid_xxx(xlink):
                 if not wasPreviouslySeenXXX(chat_id, xlink):
-                    bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + xlink)
+                    bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + ', ' + requestText + ': ' + xlink)
                     addPreviouslySeenXXXValue(chat_id, xlink)
                     sent_count += 1
                     break
@@ -92,12 +92,11 @@ def is_valid_xxx(xlink):
            'xvideos.com/profiles/' not in xlink and \
            'xnxx.com/?' not in xlink and \
            'xnxx.com/tags/' not in xlink and \
+           'xhamster.com/channels/' not in xlink and \
+           'xhamster.com/forums/' not in xlink and \
            'xhamster.com/stories_search' not in xlink and \
            'redtube.com/pornstar/' not in xlink and \
-           'search?search=' not in xlink and \
-           'xhamster.com/forums/' not in xlink and \
-           'xvideos.com/profiles/' not in xlink and \
-           'xhamster.com/channels/' not in xlink
+           'search?search=' not in xlink
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
