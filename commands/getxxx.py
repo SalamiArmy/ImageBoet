@@ -2,7 +2,8 @@
 
 from google.appengine.ext import ndb
 
-import mainget = main.load_code_as_module('get')
+import main
+get = main.load_code_as_module('get')
 
 CommandName = 'getxxx'
 
@@ -95,7 +96,8 @@ def is_valid_xxx(xlink):
            'redtube.com/pornstar/' not in xlink and \
            'search?search=' not in xlink and \
            'xhamster.com/forums/' not in xlink and \
-           'xvideos.com/profiles/' not in xlink
+           'xvideos.com/profiles/' not in xlink and \
+           'xhamster.com/channels/' not in xlink
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
