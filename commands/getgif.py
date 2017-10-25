@@ -88,8 +88,8 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         total_offset += 1
         if '?' in imagelink:
             imagelink = imagelink[:imagelink.index('?')]
-        if not get.wasPreviouslySeenImage(chat_id, imagelink):
-            get.addPreviouslySeenImagesValue(chat_id, imagelink)
+        if not get.wasPreviouslySeenImage(imagelink, chat_id):
+            get.addPreviouslySeenImagesValue(imagelink, chat_id)
             if is_valid_gif(imagelink):
                 if number == 1:
                     if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):

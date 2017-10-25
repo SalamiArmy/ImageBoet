@@ -1,4 +1,5 @@
 # coding=utf-8
+import hashlib
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -20,22 +21,19 @@ class WhosSeenImageUrls(ndb.Model):
     # key name: ImageUrl
     whoseSeenImage = ndb.StringProperty(indexed=False, default='')
 
+class ImageHashes(ndb.Model):
+    # key name: hashDigest
+    hasHash = ndb.BooleanProperty(indexed=False, default=False)
+
 # ================================
 
-def setPreviouslySeenImagesValue(chat_id, NewValue):
-    es = WhosSeenImageUrls.get_or_insert(NewValue)
-    es.whoseSeenImage = str(chat_id)
-    es.put()
-
-
-def addPreviouslySeenImagesValue(chat_id, NewValue):
-    es = WhosSeenImageUrls.get_or_insert(NewValue)
+def addPreviouslySeenImagesValue(image_url, chat_id):
+    es = WhosSeenImageUrls.get_or_insert(image_url)
     if es.whoseSeenImage == '':
         es.whoseSeenImage = str(chat_id)
     else:
         es.whoseSeenImage += ',' + str(chat_id)
     es.put()
-
 
 def getWhoseSeenImagesValue(image_link):
     es = WhosSeenImageUrls.get_or_insert(image_link)
@@ -43,8 +41,19 @@ def getWhoseSeenImagesValue(image_link):
         return es.whoseSeenImage.encode('utf-8')
     return ''
 
+def getHashedImagesValue(imageHash):
+    es = ImageHashes.get_or_insert(imageHash)
+    if es:
+        if es.hasHash:
+            return True
+        else:
+            es.hasHash = True
+            es.put()
+            return False
+    return False
 
-def wasPreviouslySeenImage(chat_id, image_link):
+
+def wasPreviouslySeenImage(image_link, chat_id):
     allWhoveSeenImage = getWhoseSeenImagesValue(image_link)
     if ',' + str(chat_id) + ',' in allWhoveSeenImage or \
             allWhoveSeenImage.startswith(str(chat_id) + ',') or \
@@ -79,21 +88,30 @@ def Google_Custom_Search(args):
         results_this_page = data['queries']['request'][0]['count']
     return data, total_results, results_this_page
 
-def is_valid_image(imagelink):
-    return imagelink != '' and \
-           not imagelink.startswith('x-raw-image:///') and \
-           ImageIsSmallEnough(imagelink)
+def is_valid_image(image_url):
+    if image_url != '' and not image_url.startswith('x-raw-image:///'):
+        image_file, image_file_value = GetImageFile(image_url)
+        return ImageIsSmallEnough(image_file) and ImageHasUniqueHashDigest(image_file_value)
+    return False
 
+def ImageIsSmallEnough(image_file):
+    return int(sys.getsizeof(image_file)) < 10000000
 
-def ImageIsSmallEnough(imagelink):
+def ImageHasUniqueHashDigest(image_as_string):
+    image_as_hash = hashlib.md5(image_as_string)
+    image_hash_digest = image_as_hash.hexdigest()
+    hashed_before = getHashedImagesValue(image_hash_digest)
+    return not hashed_before
+
+def GetImageFile(image_url):
     global image_file, fd
     try:
-        fd = urllib.urlopen(imagelink)
+        fd = urllib.urlopen(image_url)
         image_file = io.BytesIO(fd.read())
     except IOError:
         return False
     else:
-        return int(sys.getsizeof(image_file)) < 10000000
+        return image_file, image_file.getvalue()
     finally:
         try:
             if image_file:
@@ -213,13 +231,13 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
                           total_offset=0, total_sent=0):
     offset_this_page = 0
     while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
-        imagelink = data['items'][offset_this_page]['link']
+        imagelink = str(data['items'][offset_this_page]['link'])
         offset_this_page += 1
         total_offset = int(total_offset) + 1
         if '?' in imagelink:
             imagelink = imagelink[:imagelink.index('?')]
-        if not wasPreviouslySeenImage(chat_id, imagelink):
-            addPreviouslySeenImagesValue(chat_id, imagelink)
+        if not wasPreviouslySeenImage(imagelink, chat_id):
+            addPreviouslySeenImagesValue(imagelink, chat_id)
             if is_valid_image(imagelink):
                 if number == 1:
                     if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +

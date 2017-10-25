@@ -3,7 +3,8 @@ import ConfigParser
 import unittest
 import telegram
 
-import commands.get as get
+from commands import add
+
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 
@@ -24,12 +25,30 @@ class TestGet(unittest.TestCase):
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
 
-    def test_get(self):
+    def test_multi_get(self):
         requestText = 'old ass titties'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
-        bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
+        keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
+        bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
+        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
+
+        from commands import get
         get.run(bot, chatId, 'Admin', keyConfig, requestText, 11)
+
+    def test_single_get(self):
+        requestText = 'old ass titties'
+
+        keyConfig = ConfigParser.ConfigParser()
+        keyConfig.read(["keys.ini", "..\keys.ini"])
+        keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
+        bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+        chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
+
+        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
+
+        from commands import get
+        get.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
