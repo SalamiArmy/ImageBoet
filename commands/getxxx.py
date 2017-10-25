@@ -69,7 +69,7 @@ def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, r
             xlink = item['link']
             if is_valid_xxx(xlink):
                 if not wasPreviouslySeenXXX(chat_id, xlink):
-                    bot.sendMessage(chat_id=chat_id, text=(user + ': ' if not user == '' else '') + ', ' + requestText + ': ' + xlink)
+                    bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + requestText + ': ' + xlink)
                     addPreviouslySeenXXXValue(chat_id, xlink)
                     sent_count += 1
                     break
