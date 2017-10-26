@@ -2,7 +2,7 @@
 import hashlib
 import sys
 
-from gcloud.logging import logger
+import logging
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -119,7 +119,7 @@ def ImageIsSmallEnough(image_file):
 def ImageHasUniqueHashDigest(image_as_string, chat_id):
     image_as_hash = hashlib.md5(image_as_string)
     image_hash_digest = image_as_hash.hexdigest()
-    logger.info('hashed image as ' + image_hash_digest)
+    logging.info('hashed image as ' + image_hash_digest)
     hashed_before = wasPreviouslySeenHash(image_hash_digest, chat_id)
     return not hashed_before
 
