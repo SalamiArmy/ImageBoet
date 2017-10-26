@@ -23,7 +23,7 @@ class WhosSeenImageUrls(ndb.Model):
 
 class WhosSeenHashDigests(ndb.Model):
     # key name: hashDigest
-    whoseSeenHash = ndb.StringProperty(indexed=False, default=False)
+    whoseSeenHash = ndb.StringProperty(indexed=False, default='')
 
 # ================================
 
