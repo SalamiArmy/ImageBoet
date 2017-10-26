@@ -63,7 +63,7 @@ def wasPreviouslySeenImage(image_link, chat_id):
             allWhoveSeenImage.endswith(',' + str(chat_id)) or \
                     allWhoveSeenImage == str(chat_id):
         return True
-    addPreviouslySeenImagesValue(imagelink, chat_id)
+    addPreviouslySeenImagesValue(image_link, chat_id)
     return False
 
 def wasPreviouslySeenHash(imageHash, chat_id):
