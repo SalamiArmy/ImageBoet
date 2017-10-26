@@ -1,6 +1,9 @@
 # coding=utf-8
 import hashlib
 import sys
+
+from gcloud.logging import logger
+
 reload(sys)
 sys.setdefaultencoding('utf8')
 import json
@@ -22,7 +25,7 @@ class WhosSeenImageUrls(ndb.Model):
     whoseSeenImage = ndb.StringProperty(indexed=False, default='')
 
 class WhosSeenHashDigests(ndb.Model):
-    # key name: hashDigest
+    # key name: ImageHash
     whoseSeenHash = ndb.StringProperty(indexed=False, default='')
 
 # ================================
@@ -35,8 +38,8 @@ def addPreviouslySeenImagesValue(image_url, chat_id):
         es.whoseSeenImage += ',' + str(chat_id)
     es.put()
 
-def addPreviouslySeenHashDigest(imageHash, chat_id):
-    es = WhosSeenHashDigests.get_or_insert(imageHash)
+def addPreviouslySeenHashDigest(image_hash, chat_id):
+    es = WhosSeenHashDigests.get_or_insert(image_hash)
     if es.whoseSeenHash == '':
         es.whoseSeenHash = str(chat_id)
     else:
@@ -46,13 +49,13 @@ def addPreviouslySeenHashDigest(imageHash, chat_id):
 def getWhoseSeenImagesValue(image_link):
     es = WhosSeenImageUrls.get_or_insert(image_link)
     if es:
-        return es.whoseSeenImage.encode('utf-8')
+        return str(es.whoseSeenImage)
     return ''
 
-def getWhoseSeenHashDigest(image_link):
-    es = WhosSeenHashDigests.get_or_insert(image_link)
+def getWhoseSeenHashDigest(image_hash):
+    es = WhosSeenHashDigests.get_or_insert(image_hash)
     if es:
-        return es.whoseSeenHash.encode('utf-8')
+        return str(es.whoseSeenHash)
     return ''
 
 
@@ -66,14 +69,14 @@ def wasPreviouslySeenImage(image_link, chat_id):
     addPreviouslySeenImagesValue(image_link, chat_id)
     return False
 
-def wasPreviouslySeenHash(imageHash, chat_id):
-    allWhoveSeenHash = getWhoseSeenHashDigest(imageHash)
+def wasPreviouslySeenHash(image_hash, chat_id):
+    allWhoveSeenHash = getWhoseSeenHashDigest(image_hash)
     if ',' + str(chat_id) + ',' in allWhoveSeenHash or \
             allWhoveSeenHash.startswith(str(chat_id) + ',') or \
             allWhoveSeenHash.endswith(',' + str(chat_id)) or \
                     allWhoveSeenHash == str(chat_id):
         return True
-    addPreviouslySeenHashDigest(imageHash, chat_id)
+    addPreviouslySeenHashDigest(image_hash, chat_id)
     return False
 
 
@@ -116,6 +119,7 @@ def ImageIsSmallEnough(image_file):
 def ImageHasUniqueHashDigest(image_as_string, chat_id):
     image_as_hash = hashlib.md5(image_as_string)
     image_hash_digest = image_as_hash.hexdigest()
+    logger.info('hashed image as ' + image_hash_digest)
     hashed_before = wasPreviouslySeenHash(image_hash_digest, chat_id)
     return not hashed_before
 
