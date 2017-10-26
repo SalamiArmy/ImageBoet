@@ -37,10 +37,10 @@ def addPreviouslySeenImagesValue(image_url, chat_id):
 
 def addPreviouslySeenHashDigest(imageHash, chat_id):
     es = WhosSeenHashDigests.get_or_insert(imageHash)
-    if es.hasHash == '':
-        es.hasHash = str(chat_id)
+    if es.whoseSeenHash == '':
+        es.whoseSeenHash = str(chat_id)
     else:
-        es.hasHash += ',' + str(chat_id)
+        es.whoseSeenHash += ',' + str(chat_id)
     es.put()
 
 def getWhoseSeenImagesValue(image_link):
@@ -52,7 +52,7 @@ def getWhoseSeenImagesValue(image_link):
 def getWhoseSeenHashDigest(image_link):
     es = WhosSeenHashDigests.get_or_insert(image_link)
     if es:
-        return es.hasHash.encode('utf-8')
+        return es.whoseSeenHash.encode('utf-8')
     return ''
 
 
