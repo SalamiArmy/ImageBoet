@@ -5,8 +5,6 @@ import urllib
 import io
 import main
 
-from google.appengine.ext import ndb
-
 import sys
 from PIL import Image
 
@@ -27,33 +25,34 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults)
 
 
-def is_valid_gif(imagelink):
-    global gif, image_file, fd
-    try:
-        fd = urllib.urlopen(imagelink)
-        image_file = io.BytesIO(fd.read())
-        gif = Image.open(image_file)
-    except:
-        return False
-    else:
+def is_valid_gif(imagelink, chat_id):
+    if not get.wasPreviouslySeenImage(imagelink, chat_id):
+        global gif, image_file, fd
         try:
-            gif.seek(1)
-        except EOFError:
-            pass
+            fd = urllib.urlopen(imagelink)
+            image_file = io.BytesIO(fd.read())
+            gif = Image.open(image_file)
+        except:
+            return False
         else:
-            return int(sys.getsizeof(image_file)) < 10000000 and get.ImageHasUniqueHashDigest(image_file.getvalue())
-    finally:
-        try:
-            if gif:
-                gif.fp.close()
-            if image_file:
-                image_file.close()
-            if fd:
-                fd.close()
-        except UnboundLocalError:
-            print("gif, image_file or fd local not defined")
-        except NameError:
-            print("gif, image_file or fd global not defined")
+            try:
+                gif.seek(1)
+            except EOFError:
+                pass
+            else:
+                return int(sys.getsizeof(image_file)) < 10000000 and get.ImageHasUniqueHashDigest(image_file.getvalue(), chat_id)
+        finally:
+            try:
+                if gif:
+                    gif.fp.close()
+                if image_file:
+                    image_file.close()
+                if fd:
+                    fd.close()
+            except UnboundLocalError:
+                print("gif, image_file or fd local not defined")
+            except NameError:
+                print("gif, image_file or fd global not defined")
 
 def Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults=1):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
@@ -88,17 +87,15 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         total_offset += 1
         if '?' in imagelink:
             imagelink = imagelink[:imagelink.index('?')]
-        if not get.wasPreviouslySeenImage(imagelink, chat_id):
-            get.addPreviouslySeenImagesValue(imagelink, chat_id)
-            if is_valid_gif(imagelink):
-                if number == 1:
-                    if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
-                        total_sent += 1
-                    get.send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
-                else:
-                    message = requestText + ': ' + (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
-                    bot.sendMessage(chat_id, message)
+        if is_valid_gif(imagelink, chat_id):
+            if number == 1:
+                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
                     total_sent += 1
+                get.send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
+            else:
+                message = requestText + ': ' + (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
+                bot.sendMessage(chat_id, message)
+                total_sent += 1
     if int(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = get.Google_Custom_Search(args)

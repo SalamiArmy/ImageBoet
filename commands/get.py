@@ -21,9 +21,9 @@ class WhosSeenImageUrls(ndb.Model):
     # key name: ImageUrl
     whoseSeenImage = ndb.StringProperty(indexed=False, default='')
 
-class ImageHashes(ndb.Model):
+class WhosSeenHashDigests(ndb.Model):
     # key name: hashDigest
-    hasHash = ndb.BooleanProperty(indexed=False, default=False)
+    whoseSeenHash = ndb.BooleanProperty(indexed=False, default=False)
 
 # ================================
 
@@ -35,22 +35,25 @@ def addPreviouslySeenImagesValue(image_url, chat_id):
         es.whoseSeenImage += ',' + str(chat_id)
     es.put()
 
+def addPreviouslySeenHashDigest(imageHash, chat_id):
+    es = WhosSeenHashDigests.get_or_insert(imageHash)
+    if es.hasHash == '':
+        es.hasHash = str(chat_id)
+    else:
+        es.hasHash += ',' + str(chat_id)
+    es.put()
+
 def getWhoseSeenImagesValue(image_link):
     es = WhosSeenImageUrls.get_or_insert(image_link)
     if es:
         return es.whoseSeenImage.encode('utf-8')
     return ''
 
-def getHashedImagesValue(imageHash):
-    es = ImageHashes.get_or_insert(imageHash)
+def getWhoseSeenHashDigest(image_link):
+    es = WhosSeenHashDigests.get_or_insert(image_link)
     if es:
-        if es.hasHash:
-            return True
-        else:
-            es.hasHash = True
-            es.put()
-            return False
-    return False
+        return es.hasHash.encode('utf-8')
+    return ''
 
 
 def wasPreviouslySeenImage(image_link, chat_id):
@@ -60,6 +63,17 @@ def wasPreviouslySeenImage(image_link, chat_id):
             allWhoveSeenImage.endswith(',' + str(chat_id)) or \
                     allWhoveSeenImage == str(chat_id):
         return True
+    addPreviouslySeenImagesValue(imagelink, chat_id)
+    return False
+
+def wasPreviouslySeenHash(imageHash, chat_id):
+    allWhoveSeenHash = getWhoseSeenHashDigest(imageHash)
+    if ',' + str(chat_id) + ',' in allWhoveSeenHash or \
+            allWhoveSeenHash.startswith(str(chat_id) + ',') or \
+            allWhoveSeenHash.endswith(',' + str(chat_id)) or \
+                    allWhoveSeenHash == str(chat_id):
+        return True
+    addPreviouslySeenHashDigest(imageHash, chat_id)
     return False
 
 
@@ -88,19 +102,21 @@ def Google_Custom_Search(args):
         results_this_page = data['queries']['request'][0]['count']
     return data, total_results, results_this_page
 
-def is_valid_image(image_url):
-    if image_url != '' and not image_url.startswith('x-raw-image:///'):
+def is_valid_image(image_url, chat_id):
+    if image_url != '' and \
+            not image_url.startswith('x-raw-image:///') and \
+            not wasPreviouslySeenImage(image_url, chat_id):
         image_file, image_file_value = GetImageFile(image_url)
-        return ImageIsSmallEnough(image_file) and ImageHasUniqueHashDigest(image_file_value)
+        return ImageIsSmallEnough(image_file) and ImageHasUniqueHashDigest(image_file_value, chat_id)
     return False
 
 def ImageIsSmallEnough(image_file):
     return int(sys.getsizeof(image_file)) < 10000000
 
-def ImageHasUniqueHashDigest(image_as_string):
+def ImageHasUniqueHashDigest(image_as_string, chat_id):
     image_as_hash = hashlib.md5(image_as_string)
     image_hash_digest = image_as_hash.hexdigest()
-    hashed_before = getHashedImagesValue(image_hash_digest)
+    hashed_before = wasPreviouslySeenHash(image_hash_digest, chat_id)
     return not hashed_before
 
 def GetImageFile(image_url):
@@ -236,19 +252,17 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         total_offset = int(total_offset) + 1
         if '?' in imagelink:
             imagelink = imagelink[:imagelink.index('?')]
-        if not wasPreviouslySeenImage(imagelink, chat_id):
-            addPreviouslySeenImagesValue(imagelink, chat_id)
-            if is_valid_image(imagelink):
-                if number == 1:
-                    if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +
-                            (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '')):
-                        total_sent += 1
-                    send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
-                else:
-                    message = requestText + ': ' + \
-                              (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
-                    bot.sendMessage(chat_id, message)
+        if is_valid_image(imagelink, chat_id):
+            if number == 1:
+                if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +
+                        (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '')):
                     total_sent += 1
+                send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
+            else:
+                message = requestText + ': ' + \
+                          (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
+                bot.sendMessage(chat_id, message)
+                total_sent += 1
     if int(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = Google_Custom_Search(args)
