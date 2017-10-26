@@ -40,7 +40,7 @@ class TestGet(unittest.TestCase):
         get.run(bot, chatId, 'Admin', keyConfig, requestText, 11)
 
     def test_single_get(self):
-        requestText = 'old ass titties'
+        requestText = 'montage of heck'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])

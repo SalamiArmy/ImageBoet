@@ -261,7 +261,7 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
                 if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +
                         (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '')):
                     total_sent += 1
-                send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
+                    send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
             else:
                 message = requestText + ': ' + \
                           (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
