@@ -22,7 +22,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'q': requestText,
             'fileType': 'gif',
             'start': 1}
-    Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults)
+    return Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults)
 
 
 def is_valid_gif(imagelink, chat_id):
@@ -58,29 +58,30 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalRe
     data, total_results, results_this_page = get.Google_Custom_Search(args)
     if 'items' in data and int(total_results) > 0:
         total_sent = search_results_walker(args, bot, chat_id, data, totalResults, user + ', ' + requestText, results_this_page, total_results, keyConfig)
-        if int(total_sent) < int(totalResults):
+        if len(total_sent) < int(totalResults):
             if int(totalResults) > 1:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                       ', I\'m afraid I can\'t find any more gifs for ' +
                                                       string.capwords(requestText.encode('utf-8')) + '.' +
-                                                      ' I could only find ' + str(total_sent) + ' out of ' +
+                                                      ' I could only find ' + str(len(total_sent)) + ' out of ' +
                                                       str(totalResults))
             else:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                       ', I\'m afraid I can\'t find a gif for ' +
                                                       string.capwords(requestText.encode('utf-8')) +
                                                       '.'.encode('utf-8'))
-        else:
-            return True
+        return total_sent
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t find a gif for ' +
-                                              string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8'))
+        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                   ', I\'m afraid I can\'t find a gif for ' + \
+                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8')
+        bot.sendMessage(chat_id=chat_id, text=errorMsg)
+        return [errorMsg]
 
 def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
-                          total_sent=0, total_offset=0):
+                          total_sent=[], total_offset=0):
     offset_this_page = 0
-    while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
+    while len(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
         imagelink = data['items'][offset_this_page]['link']
         print 'got image link ' + imagelink
         offset_this_page += 1
@@ -90,16 +91,16 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         if is_valid_gif(imagelink, chat_id):
             if number == 1:
                 if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
-                    total_sent += 1
+                    total_sent += imagelink
                     get.send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
             else:
-                message = requestText + ': ' + (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
+                message = requestText + ': ' + (str(len(total_sent) + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
                 bot.sendMessage(chat_id, message)
-                total_sent += 1
-    if int(total_sent) < int(number) and int(total_offset) < int(total_results):
+                total_sent += imagelink
+    if len(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = get.Google_Custom_Search(args)
         return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
                                      total_sent, total_offset)
-    return int(total_sent)
+    return total_sent
 

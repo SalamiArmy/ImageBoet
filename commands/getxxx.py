@@ -47,9 +47,9 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     args, data, results_this_page, total_results = search_gcse_for_xxx(keyConfig, requestText)
     if totalResults > 1:
-        Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, totalResults, args)
+        return Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, totalResults, args)
     else:
-        Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, results_this_page)
+        return Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, results_this_page)
 
 
 def search_gcse_for_xxx(keyConfig, requestText):
@@ -72,10 +72,12 @@ def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, r
                     bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + requestText + ': ' + xlink)
                     addPreviouslySeenXXXValue(chat_id, xlink)
                     sent_count += 1
-                    break
+                    return [xlink]
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', you\'re just too filthy.')
+        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                   ', you\'re just too filthy.'
+        bot.sendMessage(chat_id=chat_id, text=errorMsg)
+        return [errorMsg]
 
 
 def is_valid_xxx(xlink):
@@ -101,27 +103,30 @@ def is_valid_xxx(xlink):
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
     if data['searchInformation']['totalResults'] >= '1':
-        sent_count = 0
+        total_sent = []
         total_offset = 0
-        while int(sent_count) < int(number) and int(total_offset) < int(total_results):
+        while len(total_sent) < int(number) and int(total_offset) < int(total_results):
             for item in data['items']:
                 xlink = item['link']
                 total_offset += 1
                 if is_valid_xxx(xlink):
                     if not wasPreviouslySeenXXX(chat_id, xlink):
-                        bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(sent_count+1)
+                        bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(len(total_sent)+1)
                                                               + ' of ' + str(number) + ':' + xlink)
                         addPreviouslySeenXXXValue(chat_id, xlink)
-                        sent_count += 1
-                if int(sent_count) >= int(number) or int(total_offset) >= int(total_results):
+                        total_sent += 1
+                if len(total_sent) >= int(number) or int(total_offset) >= int(total_results):
                     break
-            if int(sent_count) < int(number) and int(total_offset) < int(total_results):
+            if len(total_sent) < int(number) and int(total_offset) < int(total_results):
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
-        if int(sent_count) < int(number):
+        if len(total_sent) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I cannot find enough filth for ' + requestText + '.' +
-                                                  ' I could only find ' + str(sent_count) + ' out of ' + str(number))
+                                                  ' I could only find ' + str(total_sent) + ' out of ' + str(number))
+        return total_sent
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', you\'re just too filthy.')
+        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
+                   ', you\'re just too filthy.'
+        bot.sendMessage(chat_id=chat_id, text=errorMsg)
+        return [errorMsg]

@@ -1,5 +1,6 @@
 # coding=utf-8
-import mainget = main.load_code_as_module('get')
+import main
+get = main.load_code_as_module('get')
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
@@ -10,4 +11,4 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'safe': 'off',
             'q': 'fig',
             'start': 1}
-    get.Send_Images(bot, chat_id, user, requestText, args, keyConfig, totalResults)
+    return get.Send_Images(bot, chat_id, user, requestText, args, keyConfig, totalResults)

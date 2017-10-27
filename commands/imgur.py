@@ -22,8 +22,10 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             bot.sendDocument(chat_id=chat_id,
                              filename=requestText.encode('utf-8'),
                              document=item.link.encode('utf-8'))
-            return True
+            return item.link.encode('utf-8')
     else:
-        bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                              ', I\'m afraid I can\'t find any Imgur images for ' +
-                                              string.capwords(requestText.encode('utf-8')))
+        errorMsg = 'I\'m sorry ' + (
+        user if not user == '' else 'Dave') + ', I\'m afraid I can\'t find any Imgur images for ' + string.capwords(
+            requestText.encode('utf-8'))
+        bot.sendMessage(chat_id=chat_id, text=errorMsg)
+        return errorMsg

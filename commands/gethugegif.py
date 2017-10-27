@@ -1,5 +1,6 @@
 # coding=utf-8
-import maingetgif = main.load_code_as_module('getgif')
+import main
+getgif = main.load_code_as_module('getgif')
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
@@ -12,4 +13,4 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'fileType': 'gif',
             'start': 1,
             'imgSize': 'huge'}
-    getgif.Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults)
+    return getgif.Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults)

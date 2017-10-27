@@ -81,7 +81,6 @@ def wasPreviouslySeenHash(image_hash, chat_id):
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
-    print message
     requestText = str(message).replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_IMAGE_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
@@ -89,7 +88,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'safe': 'off',
             'q': requestText,
             'start': 1}
-    Send_Images(bot, chat_id, user, requestText, args, keyConfig, totalResults)
+    return Send_Images(bot, chat_id, user, requestText, args, keyConfig, totalResults)
 
 
 def Google_Custom_Search(args):
@@ -225,32 +224,35 @@ def Send_Images(bot, chat_id, user, requestText, args, keyConfig, total_number_t
         total_offset, total_results, total_sent = search_results_walker(args, bot, chat_id, data, total_number_to_send,
                                                                         user + ', ' + requestText, results_this_page,
                                                                         total_results, keyConfig)
-        if int(total_sent) < int(total_number_to_send):
+        if len(total_sent) < int(total_number_to_send):
             if int(total_number_to_send) > 1:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                       ', I\'m afraid I can\'t find any more images for ' +
                                                       string.capwords(requestText.encode('utf-8') + '.' +
                                                                       ' I could only find ' + str(
-                                                          total_sent) + ' out of ' + str(total_number_to_send)))
+                                                          len(total_sent)) + ' out of ' + str(total_number_to_send)))
             else:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                       ', I\'m afraid I can\'t find any images for ' +
                                                       string.capwords(requestText.encode('utf-8')))
-        else:
-            return True
+        return total_sent
     else:
         if 'error' in data:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  data['error']['message'])
+            errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
+                       data['error']['message']
+            bot.sendMessage(chat_id=chat_id, text=errorMsg)
+            return [errorMsg]
         else:
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I can\'t find any images for ' +
-                                                  string.capwords(requestText.encode('utf-8')))
+            errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                       ', I\'m afraid I can\'t find any images for ' + \
+                       string.capwords(requestText.encode('utf-8'))
+            bot.sendMessage(chat_id=chat_id, text=errorMsg)
+            return [errorMsg]
 
 def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
-                          total_offset=0, total_sent=0):
+                          total_offset=0, total_sent=[]):
     offset_this_page = 0
-    while int(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
+    while len(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
         imagelink = str(data['items'][offset_this_page]['link'])
         offset_this_page += 1
         total_offset = int(total_offset) + 1
@@ -259,15 +261,15 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         if is_valid_image(imagelink, chat_id):
             if number == 1:
                 if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +
-                        (' ' + str(total_sent + 1) + ' of ' + str(number) if int(number) > 1 else '')):
-                    total_sent += 1
+                        (' ' + str(len(total_sent) + 1) + ' of ' + str(number) if int(number) > 1 else '')):
+                    total_sent += imagelink
                     send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
             else:
                 message = requestText + ': ' + \
-                          (str(total_sent + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
+                          (str(len(total_sent) + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
                 bot.sendMessage(chat_id, message)
-                total_sent += 1
-    if int(total_sent) < int(number) and int(total_offset) < int(total_results):
+                total_sent += imagelink
+    if len(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = Google_Custom_Search(args)
         return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,

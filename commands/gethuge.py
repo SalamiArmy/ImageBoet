@@ -11,6 +11,6 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'safe': "off",
             'q': requestText,
             "imgSize": "huge"}
-    get.Send_Images(bot, chat_id, user, requestText, args, keyConfig, totalResults)
+    return get.Send_Images(bot, chat_id, user, requestText, args, keyConfig, totalResults)
 
 
