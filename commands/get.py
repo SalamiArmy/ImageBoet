@@ -262,13 +262,13 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
             if number == 1:
                 if retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText +
                         (' ' + str(len(total_sent) + 1) + ' of ' + str(number) if int(number) > 1 else '')):
-                    total_sent += imagelink
+                    total_sent.append(imagelink)
                     send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
             else:
                 message = requestText + ': ' + \
                           (str(len(total_sent) + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
                 bot.sendMessage(chat_id, message)
-                total_sent += imagelink
+                total_sent.append(imagelink)
     if len(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = Google_Custom_Search(args)
