@@ -54,9 +54,9 @@ def single_page_watch(args, bot, chat_id, keyConfig, requestText, user, watched_
             if not get.wasPreviouslySeenImage(chat_id, imagelink):
                 get.addPreviouslySeenImagesValue(chat_id, imagelink)
                 if imagelink[-len('.gif'):] == '.gif':
-                    is_valid = getgif.is_valid_gif(imagelink)
+                    is_valid = getgif.is_valid_gif(imagelink, chat_id)
                 else:
-                    is_valid = get.is_valid_image(imagelink)
+                    is_valid = get.is_valid_image(imagelink, chat_id)
                 if is_valid:
                     if user != 'Watcher':
                         if total_sent == 0 and not main.AllWatchesContains(watched_command.CommandName, chat_id,
