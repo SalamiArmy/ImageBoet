@@ -1,6 +1,5 @@
 # coding=utf-8
 import string
-from threading import Thread
 import urllib
 import io
 import main
@@ -40,7 +39,8 @@ def is_valid_gif(imagelink, chat_id):
             except EOFError:
                 pass
             else:
-                return int(sys.getsizeof(image_file)) < 10000000 and get.ImageHasUniqueHashDigest(image_file.getvalue(), chat_id)
+                return int(sys.getsizeof(image_file)) < 10000000 and \
+                       get.ImageHasUniqueHashDigest(image_file.getvalue(), chat_id)
         finally:
             try:
                 if gif:
