@@ -51,26 +51,24 @@ def single_page_watch(args, bot, chat_id, keyConfig, requestText, user, watched_
             offset_this_page += 1
             if '?' in imagelink:
                 imagelink = imagelink[:imagelink.index('?')]
-            if not get.wasPreviouslySeenImage(chat_id, imagelink):
-                get.addPreviouslySeenImagesValue(chat_id, imagelink)
-                if imagelink[-len('.gif'):] == '.gif':
-                    is_valid = getgif.is_valid_gif(imagelink, chat_id)
-                else:
-                    is_valid = get.is_valid_image(imagelink, chat_id)
-                if is_valid:
-                    if user != 'Watcher':
-                        if total_sent == 0 and not main.AllWatchesContains(watched_command.CommandName, chat_id,
-                                                                           requestText):
-                            watch_message = 'Now watching /' + watched_command.CommandName + ' ' + requestText + '.'
-                        else:
-                            watch_message = 'Watched /' + watched_command.CommandName + ' ' + requestText + ' changed' + '.'
-                        total_sent = send_image_with_watch_message(bot, chat_id, imagelink, keyConfig, requestText,
-                                                                   total_sent, user, watch_message)
+            if imagelink[-len('.gif'):] == '.gif':
+                is_valid = getgif.is_valid_gif(imagelink, chat_id)
+            else:
+                is_valid = get.is_valid_image(imagelink, chat_id)
+            if is_valid:
+                if user != 'Watcher':
+                    if total_sent == 0 and not main.AllWatchesContains(watched_command.CommandName, chat_id,
+                                                                       requestText):
+                        watch_message = 'Now watching /' + watched_command.CommandName + ' ' + requestText + '.'
                     else:
-                        total_sent = send_image_with_watch_message(bot, chat_id, imagelink, keyConfig, requestText,
-                                                                   total_sent, user,
-                                                                   'Watched /' + watched_command.CommandName +
-                                                                   ' ' + requestText + ' changed.')
+                        watch_message = 'Watched /' + watched_command.CommandName + ' ' + requestText + ' changed' + '.'
+                    total_sent = send_image_with_watch_message(bot, chat_id, imagelink, keyConfig, requestText,
+                                                               total_sent, user, watch_message)
+                else:
+                    total_sent = send_image_with_watch_message(bot, chat_id, imagelink, keyConfig, requestText,
+                                                               total_sent, user,
+                                                               'Watched /' + watched_command.CommandName +
+                                                               ' ' + requestText + ' changed.')
         if total_sent == 0:
             if user != 'Watcher':
                 bot.sendMessage(chat_id=chat_id, text=user + ', watch for /' +
