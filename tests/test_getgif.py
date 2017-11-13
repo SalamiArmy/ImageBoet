@@ -42,8 +42,24 @@ class TestGet(unittest.TestCase):
         import commands.getgif as getgif
         getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
 
+    def test_multi_getgif(self):
+        requestText = 'look ash likes the gays'
+
+        keyConfig = ConfigParser.ConfigParser()
+        keyConfig.read(['bot_keys.ini', '..\\bot_keys.ini'])
+        bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
+        chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
+
+        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
+        add.setCommandCode('get', open('../commands/get.py').read())
+
+        keyConfig.read(['keys.ini', '..\\keys.ini'])
+
+        import commands.getgif as getgif
+        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 5)
+
     def test_getgif_group(self):
-        requestText = 'baby fresh'
+        requestText = 'bot sucks cock'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(['bot_keys.ini', '..\\bot_keys.ini'])
@@ -56,4 +72,4 @@ class TestGet(unittest.TestCase):
         keyConfig.read(['keys.ini', '..\\keys.ini'])
 
         import commands.getgif as getgif
-        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 5)
+        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
