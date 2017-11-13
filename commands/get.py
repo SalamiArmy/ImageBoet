@@ -120,6 +120,8 @@ def ImageHasUniqueHashDigest(image_as_string, chat_id):
     image_hash_digest = image_as_hash.hexdigest()
     logging.info('hashed image as ' + image_hash_digest)
     hashed_before = wasPreviouslySeenHash(image_hash_digest, chat_id)
+    if hashed_before:
+        logging.info('Hash was previously seen for ' + image_as_string)
     return not hashed_before
 
 def GetImageFile(image_url):
