@@ -95,6 +95,7 @@ def is_valid_xxx(xlink):
            'xnxx.com/?' not in xlink and \
            'xnxx.com/search/' not in xlink and \
            'xnxx.com/tags/' not in xlink and \
+           'xhamster.com/categories/' not in xlink and \
            'xhamster.com/channels/' not in xlink and \
            'xhamster.com/forums/' not in xlink and \
            'xhamster.com/stories_search' not in xlink and \
