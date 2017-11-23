@@ -68,13 +68,13 @@ def Send_First_Valid_WikiHowLink(bot, chat_id, user, requestText, data, total_re
         for item in data['items']:
             how_link = item['link']
             if not wasPreviouslySeenWikiHowLink(chat_id, how_link):
-                bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + requestText + ': ' + how_link)
+                bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + 'how ' + requestText + ': ' + how_link)
                 addPreviouslySeenWikiHowLinkValue(chat_id, how_link)
                 sent_count += 1
                 return [how_link]
     else:
         errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                   ', I don\'t know how to ' + requestText
+                   ', I don\'t know how ' + requestText
         bot.sendMessage(chat_id=chat_id, text=errorMsg)
         return [errorMsg]
 
@@ -88,7 +88,7 @@ def Send_WikiHowLinks(bot, chat_id, user, requestText, data, total_results, resu
                 xlink = item['link']
                 total_offset += 1
                 if not wasPreviouslySeenWikiHowLink(chat_id, xlink):
-                    bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(len(total_sent)+1)
+                    bot.sendMessage(chat_id=chat_id, text='how ' + requestText + ' ' + str(len(total_sent)+1)
                                                           + ' of ' + str(number) + ':' + xlink)
                     addPreviouslySeenWikiHowLinkValue(chat_id, xlink)
                     total_sent += 1
@@ -99,11 +99,11 @@ def Send_WikiHowLinks(bot, chat_id, user, requestText, data, total_results, resu
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
         if len(total_sent) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I cannot find enough ways to ' + requestText + '.' +
+                                                  ', I\'m afraid I cannot find enough ways ' + requestText + '.' +
                                                   ' I could only find ' + str(total_sent) + ' out of ' + str(number))
         return total_sent
     else:
         errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                   ', I don\'t know how to ' + requestText
+                   ', I don\'t know how ' + requestText
         bot.sendMessage(chat_id=chat_id, text=errorMsg)
         return [errorMsg]
