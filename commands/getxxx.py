@@ -67,12 +67,11 @@ def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, r
         sent_count = 0
         for item in data['items']:
             xlink = item['link']
-            if is_valid_xxx(xlink):
-                if not wasPreviouslySeenXXX(chat_id, xlink):
-                    bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + requestText + ': ' + xlink)
-                    addPreviouslySeenXXXValue(chat_id, xlink)
-                    sent_count += 1
-                    return [xlink]
+            if is_valid_xxx(xlink) and not wasPreviouslySeenXXX(chat_id, xlink):
+                bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + requestText + ': ' + xlink)
+                addPreviouslySeenXXXValue(chat_id, xlink)
+                sent_count += 1
+                return [xlink]
     else:
         errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
                    ', you\'re just too filthy.'
@@ -112,12 +111,11 @@ def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this
             for item in data['items']:
                 xlink = item['link']
                 total_offset += 1
-                if is_valid_xxx(xlink):
-                    if not wasPreviouslySeenXXX(chat_id, xlink):
-                        bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(len(total_sent)+1)
-                                                              + ' of ' + str(number) + ':' + xlink)
-                        addPreviouslySeenXXXValue(chat_id, xlink)
-                        total_sent += 1
+                if is_valid_xxx(xlink) and not wasPreviouslySeenXXX(chat_id, xlink):
+                    bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(len(total_sent)+1)
+                                                          + ' of ' + str(number) + ':' + xlink)
+                    addPreviouslySeenXXXValue(chat_id, xlink)
+                    total_sent += 1
                 if len(total_sent) >= int(number) or int(total_offset) >= int(total_results):
                     break
             if len(total_sent) < int(number) and int(total_offset) < int(total_results):

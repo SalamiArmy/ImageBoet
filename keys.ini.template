@@ -7,6 +7,7 @@ GCSE_IMAGE_SE_ID1: {Your first Google Image Custom Search Engine ID here (for /g
 GCSE_GIF_SE_ID1: {Your first Google Gif Custom Search Engine ID here (for /getgif command)}
 GCSE_OTHER_SE_ID: {Your Non-Image Google Custom Search Engine ID here (for /getlink command)}
 GCSE_XSE_ID: {Your x-rated Google Custom Search Engine ID here}
+GCSE_HOW_SE_ID: {Your WikiHow Google Custom Search Engine ID here}
 
 [Soundcloud]
 SC_CLIENT_ID: {Your Soundcloud Api Key here}
