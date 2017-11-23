@@ -67,7 +67,7 @@ def Send_First_Valid_WikiHowLink(bot, chat_id, user, requestText, data, total_re
         sent_count = 0
         for item in data['items']:
             how_link = item['link']
-            if not wasPreviouslySeenWikiHowLink(chat_id, how_link):
+            if is_valid_how_link(xlink) and not wasPreviouslySeenWikiHowLink(chat_id, how_link):
                 bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + 'how ' + requestText + ': ' + how_link)
                 addPreviouslySeenWikiHowLinkValue(chat_id, how_link)
                 sent_count += 1
@@ -79,6 +79,10 @@ def Send_First_Valid_WikiHowLink(bot, chat_id, user, requestText, data, total_re
         return [errorMsg]
 
 
+def is_valid_how_link(how_link):
+    return 'www.wikihow.com/User:' not in how_link
+
+
 def Send_WikiHowLinks(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
     if data['searchInformation']['totalResults'] >= '1':
         total_sent = []
@@ -87,7 +91,7 @@ def Send_WikiHowLinks(bot, chat_id, user, requestText, data, total_results, resu
             for item in data['items']:
                 xlink = item['link']
                 total_offset += 1
-                if not wasPreviouslySeenWikiHowLink(chat_id, xlink):
+                if is_valid_how_link(xlink) and not wasPreviouslySeenWikiHowLink(chat_id, xlink):
                     bot.sendMessage(chat_id=chat_id, text='how ' + requestText + ' ' + str(len(total_sent)+1)
                                                           + ' of ' + str(number) + ':' + xlink)
                     addPreviouslySeenWikiHowLinkValue(chat_id, xlink)
