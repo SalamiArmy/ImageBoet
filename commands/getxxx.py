@@ -84,13 +84,13 @@ def is_valid_xxx(xlink):
            'xvideos.com/favorite/' not in xlink and \
            'xvideos.com/?k=' not in xlink and \
            'xvideos.com/tags' not in xlink and \
+           'xvideos.com/profiles/' not in xlink and \
            'pornhub.com/users/' not in xlink and \
            'pornhub.com/video/search?search=' not in xlink and \
            'pornhub.com/insights/' not in xlink and \
            'pornhub.com/devices/' not in xlink and \
            'pornhub.com/gay/' not in xlink and \
            'pornhub.com/pornstar/' not in xlink and \
-           'xvideos.com/profiles/' not in xlink and \
            'xnxx.com/?' not in xlink and \
            'xnxx.com/search/' not in xlink and \
            'xnxx.com/tags/' not in xlink and \
@@ -100,7 +100,8 @@ def is_valid_xxx(xlink):
            'xhamster.com/stories_search' not in xlink and \
            'xhamster.com/stories/' not in xlink and \
            'redtube.com/pornstar/' not in xlink and \
-           'search?search=' not in xlink
+           'motherless.com/term/' not in xlin and \
+           'search?search=' not in xlinkk
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
