@@ -1,4 +1,5 @@
 # coding=utf-8
+import ConfigParser
 
 from google.appengine.ext import ndb
 
@@ -43,13 +44,16 @@ def wasPreviouslySeenWikiHowLink(chat_id, how_link):
     return False
 
 
-def run(bot, chat_id, user, keyConfig, message, totalResults=1):
-    requestText = message.replace(bot.name, "").strip()
+def run(user, message, chat_id='', totalResults=1):
+    requestText = str(message).strip()
+    keyConfig = ConfigParser.ConfigParser()
+    keyConfig.read(["keys.ini", "..\keys.ini"])
+
     args, data, results_this_page, total_results = search_gcse_for_how(keyConfig, requestText)
     if totalResults > 1:
-        return Send_WikiHowLinks(bot, chat_id, user, requestText, data, total_results, results_this_page, totalResults, args)
+        return Send_WikiHowLinks(chat_id, user, requestText, data, total_results, results_this_page, totalResults, args)
     else:
-        return Send_First_Valid_WikiHowLink(bot, chat_id, user, requestText, data, total_results, results_this_page)
+        return Send_First_Valid_WikiHowLink(chat_id, user, requestText, data, total_results, results_this_page)
 
 
 def search_gcse_for_how(keyConfig, requestText):
@@ -62,52 +66,48 @@ def search_gcse_for_how(keyConfig, requestText):
     return args, data, results_this_page, total_results
 
 
-def Send_First_Valid_WikiHowLink(bot, chat_id, user, requestText, data, total_results, results_this_page):
+def Send_First_Valid_WikiHowLink(chat_id, user, requestText, data, total_results, results_this_page):
     if data['searchInformation']['totalResults'] >= '1':
         sent_count = 0
         for item in data['items']:
             how_link = item['link']
-            if is_valid_how_link(xlink) and not wasPreviouslySeenWikiHowLink(chat_id, how_link):
-                bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + 'how ' + requestText + ': ' + how_link)
+            if not wasPreviouslySeenWikiHowLink(chat_id, how_link):
                 addPreviouslySeenWikiHowLinkValue(chat_id, how_link)
-                sent_count += 1
-                return [how_link]
+                if is_valid_how_link(how_link):
+                    how_text = (user + ', ' if not user == '' else '') + 'how ' + requestText + ': ' + how_link
+                    sent_count += 1
+                    return how_text
     else:
-        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                   ', I don\'t know how ' + requestText
-        bot.sendMessage(chat_id=chat_id, text=errorMsg)
-        return [errorMsg]
+        return 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
+               ', I don\'t know how ' + requestText
 
 
 def is_valid_how_link(how_link):
     return 'www.wikihow.com/User:' not in how_link
 
 
-def Send_WikiHowLinks(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
+def Send_WikiHowLinks(chat_id, user, requestText, data, total_results, results_this_page, number, args):
     if data['searchInformation']['totalResults'] >= '1':
-        total_sent = []
+        total_sent = ''
         total_offset = 0
-        while len(total_sent) < int(number) and int(total_offset) < int(total_results):
+        while len(total_sent.split('\n')) < int(number) and int(total_offset) < int(total_results):
             for item in data['items']:
                 xlink = item['link']
                 total_offset += 1
                 if is_valid_how_link(xlink) and not wasPreviouslySeenWikiHowLink(chat_id, xlink):
-                    bot.sendMessage(chat_id=chat_id, text='how ' + requestText + ' ' + str(len(total_sent)+1)
-                                                          + ' of ' + str(number) + ':' + xlink)
                     addPreviouslySeenWikiHowLinkValue(chat_id, xlink)
-                    total_sent += 1
-                if len(total_sent) >= int(number) or int(total_offset) >= int(total_results):
+                    total_sent += ('\n' if total_sent != '' else '') + 'how ' + requestText + ' ' + str(len(total_sent.split('\n'))+1)\
+                                                          + ' of ' + str(number) + ':' + xlink
+                if len(total_sent.split('\n')) >= int(number) or int(total_offset) >= int(total_results):
                     break
-            if len(total_sent) < int(number) and int(total_offset) < int(total_results):
+            if len(total_sent.split('\n')) < int(number) and int(total_offset) < int(total_results):
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
-        if len(total_sent) < int(number):
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I cannot find enough ways ' + requestText + '.' +
-                                                  ' I could only find ' + str(total_sent) + ' out of ' + str(number))
+        if len(total_sent.split('\n')) < int(number):
+            total_sent += ('\n' if total_sent == '' else '') + 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
+                          ', I\'m afraid I cannot find enough ways ' + requestText + '.' +\
+                          ' I could only find ' + str(len(total_sent.split('\n'))) + ' out of ' + str(number)
         return total_sent
     else:
-        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                   ', I don\'t know how ' + requestText
-        bot.sendMessage(chat_id=chat_id, text=errorMsg)
-        return [errorMsg]
+        return 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
+               ', I don\'t know how ' + requestText

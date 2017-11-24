@@ -35,7 +35,7 @@ class TestGetHow(unittest.TestCase):
         add.setCommandCode('get', open('../commands/get.py').read())
 
         import commands.how as how
-        how.run(bot, chatId, 'Admin', keyConfig, requestText, 2)
+        bot.sendMessage(chat_id=chatId, text=how.run('Admin', requestText, chatId, 2))
 
     def test_how_group(self):
         requestText = 'nightman'
@@ -50,4 +50,4 @@ class TestGetHow(unittest.TestCase):
         add.setCommandCode('get', open('../commands/get.py').read())
 
         import commands.how as how
-        how.run(bot, chatId, 'Admin', keyConfig, requestText)
+        bot.sendMessage(chat_id=chatId, text=how.run('Admin', requestText, chatId))
