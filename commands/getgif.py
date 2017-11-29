@@ -34,14 +34,13 @@ def is_valid_gif(imagelink, chat_id):
         except:
             return False
         else:
-            if not gif.closed:
-                try:
-                    gif.seek(1)
-                except EOFError:
-                    pass
-                else:
-                    return int(sys.getsizeof(image_file)) < 10000000 and \
-                           get.ImageHasUniqueHashDigest(image_file.getvalue(), chat_id)
+            try:
+                gif.seek(1)
+            except EOFError:
+                pass
+            else:
+                return int(sys.getsizeof(image_file)) < 10000000 and \
+                       get.ImageHasUniqueHashDigest(image_file.getvalue(), chat_id)
         finally:
             try:
                 if gif:
