@@ -72,11 +72,10 @@ def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, r
                 addPreviouslySeenXXXValue(chat_id, xlink)
                 sent_count += 1
                 return [xlink]
-    else:
-        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                   ', you\'re just too filthy.'
-        bot.sendMessage(chat_id=chat_id, text=errorMsg)
-        return [errorMsg]
+    errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
+               ', you\'re just too filthy.'
+    bot.sendMessage(chat_id=chat_id, text=errorMsg)
+    return [errorMsg]
 
 
 def is_valid_xxx(xlink):
