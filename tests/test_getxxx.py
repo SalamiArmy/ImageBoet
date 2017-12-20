@@ -24,7 +24,7 @@ class TestGetXXX(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_getxxx_multiget(self):
-        requestText = 'trippy asian'
+        requestText = 'nonk tits'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -38,7 +38,7 @@ class TestGetXXX(unittest.TestCase):
         getxxx.run(bot, chatId, 'Admin', keyConfig, requestText, 2)
 
     def test_getxxx_group(self):
-        requestText = 'nightman'
+        requestText = 'rory gilmore'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(["keys.ini", "..\keys.ini"])
@@ -50,4 +50,5 @@ class TestGetXXX(unittest.TestCase):
         add.setCommandCode('get', open('../commands/get.py').read())
 
         import commands.getxxx as getxxx
-        getxxx.run(bot, chatId, 'Admin', keyConfig, requestText)
+        if getxxx.run(bot, chatId, 'Admin', keyConfig, requestText) is None:
+            raise Exception

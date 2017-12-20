@@ -72,11 +72,10 @@ def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, r
                 addPreviouslySeenXXXValue(chat_id, xlink)
                 sent_count += 1
                 return [xlink]
-    else:
-        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                   ', you\'re just too filthy.'
-        bot.sendMessage(chat_id=chat_id, text=errorMsg)
-        return [errorMsg]
+    errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
+               ', you\'re just too filthy.'
+    bot.sendMessage(chat_id=chat_id, text=errorMsg)
+    return [errorMsg]
 
 
 def is_valid_xxx(xlink):
@@ -99,7 +98,10 @@ def is_valid_xxx(xlink):
            'xhamster.com/forums/' not in xlink and \
            'xhamster.com/stories_search' not in xlink and \
            'xhamster.com/stories/' not in xlink and \
+           'xhamster.com/search/stories?q=' not in xlink and \
+           'xhamster.com/user/' not in xlink and \
            'redtube.com/pornstar/' not in xlink and \
+           'redtube.com/?search=' not in xlink and \
            'motherless.com/term/' not in xlink and \
            'search?search=' not in xlink
 
@@ -116,7 +118,7 @@ def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this
                     bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(len(total_sent)+1)
                                                           + ' of ' + str(number) + ':' + xlink)
                     addPreviouslySeenXXXValue(chat_id, xlink)
-                    total_sent += 1
+                    total_sent += xlink
                 if len(total_sent) >= int(number) or int(total_offset) >= int(total_results):
                     break
             if len(total_sent) < int(number) and int(total_offset) < int(total_results):
@@ -125,7 +127,7 @@ def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this
         if len(total_sent) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I cannot find enough filth for ' + requestText + '.' +
-                                                  ' I could only find ' + str(total_sent) + ' out of ' + str(number))
+                                                  ' I could only find ' + len(total_sent) + ' out of ' + str(number))
         return total_sent
     else:
         errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
