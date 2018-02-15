@@ -74,5 +74,31 @@ def ResolveRaceID(id):
         return 'Pandarian'
     elif id == 12:
         return 'Nig Nog'
+    elif id == 13:
+        return 'Nig Nog'
+    elif id == 14:
+        return 'Nig Nog'
+    elif id == 15:
+        return 'Nig Nog'
+    elif id == 16:
+        return 'Nig Nog'
+    elif id == 17:
+        return 'Nig Nog'
+    elif id == 18:
+        return 'Nig Nog'
+    elif id == 19:
+        return 'Nig Nog'
+    elif id == 20:
+        return 'Nig Nog'
+    elif id == 21:
+        return 'Nig Nog'
+    elif id == 22:
+        return 'Nig Nog'
+    elif id == 23:
+        return 'Nig Nog'
+    elif id == 24:
+        return 'Nig Nog'
+    elif id == 25:
+        return 'Nig Nog'
     else:
-        raise Exception('Unrecognized race id: ' + id + '.')
+        raise Exception('Unrecognized race id: ' + str(id) + '.')
