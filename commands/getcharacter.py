@@ -99,6 +99,6 @@ def ResolveRaceID(id):
     elif id == 24:
         return 'Nig Nog'
     elif id == 25:
-        return 'Nig Nog'
+        return 'Pandarian'
     else:
         raise Exception('Unrecognized race id: ' + str(id) + '.')
