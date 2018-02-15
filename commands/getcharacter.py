@@ -71,7 +71,7 @@ def ResolveRaceID(id):
     elif id == 10:
         return 'Draenei'
     elif id == 11:
-        return 'Pandarian'
+        return 'Draenei'
     elif id == 12:
         return 'Nig Nog'
     elif id == 13:
@@ -97,7 +97,7 @@ def ResolveRaceID(id):
     elif id == 23:
         return 'Nig Nog'
     elif id == 24:
-        return 'Nig Nog'
+        return 'Pandarian'
     elif id == 25:
         return 'Pandarian'
     else:
