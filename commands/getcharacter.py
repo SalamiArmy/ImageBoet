@@ -67,38 +67,50 @@ def ResolveRaceID(id):
     elif id == 8:
         return 'Troll'
     elif id == 9:
-        return 'Blood Elf'
+        return 'Goblin'
     elif id == 10:
-        return 'Draenei'
+        return 'Blood Elf'
     elif id == 11:
         return 'Draenei'
     elif id == 12:
-        return ''
+        return 'Fel Orc'
     elif id == 13:
-        return ''
+        return 'Naga'
     elif id == 14:
-        return ''
+        return 'Broken'
     elif id == 15:
-        return ''
+        return 'Skeleton'
     elif id == 16:
-        return ''
+        return 'Vrykul'
     elif id == 17:
-        return ''
+        return 'Tuskarr'
     elif id == 18:
-        return ''
+        return 'Forest Troll'
     elif id == 19:
-        return ''
+        return 'Taunka'
     elif id == 20:
-        return ''
+        return 'Northrend Skeleton'
     elif id == 21:
-        return ''
+        return 'Ice Troll'
     elif id == 22:
-        return ''
+        return 'Worgen'
     elif id == 23:
-        return ''
+        return 'Gilnean'
     elif id == 24:
-        return 'Pandarian'
+        return 'Pandaren (Allied)'
     elif id == 25:
         return 'Pandarian'
+    elif id == 25:
+        return 'Pandaren (Horde)'
+    elif id == 26:
+        return 'Nig Nog'
+    elif id == 27:
+        return 'Nightborne'
+    elif id == 28:
+        return 'Highmountain Tauren'
+    elif id == 29:
+        return 'Void Elf'
+    elif id == 30:
+        return 'Lightforged Draenei'
     else:
         raise Exception('Unrecognized race id: ' + str(id) + '.')
