@@ -2,7 +2,8 @@
 import json
 import urllib
 
-from commands import retry_on_telegram_error
+import main
+retry_on_telegram_error = main.load_code_as_module('retry_on_telegram_error')
 
 
 def run(bot, chat_id, user, keyConfig, message, total_requested_results=1):
