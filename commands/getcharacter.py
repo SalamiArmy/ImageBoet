@@ -73,29 +73,29 @@ def ResolveRaceID(id):
     elif id == 11:
         return 'Draenei'
     elif id == 12:
-        return 'Nig Nog'
+        return ''
     elif id == 13:
-        return 'Nig Nog'
+        return ''
     elif id == 14:
-        return 'Nig Nog'
+        return ''
     elif id == 15:
-        return 'Nig Nog'
+        return ''
     elif id == 16:
-        return 'Nig Nog'
+        return ''
     elif id == 17:
-        return 'Nig Nog'
+        return ''
     elif id == 18:
-        return 'Nig Nog'
+        return ''
     elif id == 19:
-        return 'Nig Nog'
+        return ''
     elif id == 20:
-        return 'Nig Nog'
+        return ''
     elif id == 21:
-        return 'Nig Nog'
+        return ''
     elif id == 22:
-        return 'Nig Nog'
+        return ''
     elif id == 23:
-        return 'Nig Nog'
+        return ''
     elif id == 24:
         return 'Pandarian'
     elif id == 25:
