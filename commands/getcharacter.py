@@ -15,10 +15,10 @@ def run(bot, chat_id, user, keyConfig, message, total_requested_results=1):
         professionsText = '\n'
         if 'primary' in data['professions'] and len(data['professions']['primary']) > 0:
             for prof in data['professions']['primary']:
-                if ('name' in prof and 'rank' in prof):
+                if ('name' in prof and 'rank' in prof and prof['rank'] > 0):
                     professionsText += str(prof['name']) + ': ' + str(prof['rank']) + '\n'
             for prof in data['professions']['secondary']:
-                if ('name' in prof and 'rank' in prof):
+                if ('name' in prof and 'rank' in prof and prof['rank'] > 0):
                     professionsText += str(prof['name']) + ': ' + str(prof['rank']) + '\n'
         if (professionsText != '\n'):
             professionsText = ' knows' + professionsText
