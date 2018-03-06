@@ -20,7 +20,7 @@ def run(bot, chat_id, user, keyConfig, message, total_requested_results=1):
             for prof in data['professions']['secondary']:
                 if ('name' in prof and 'rank' in prof):
                     professionsText += str(prof['name']) + ': ' + str(prof['rank']) + '\n'
-        if (professionsText == '\n'):
+        if (professionsText != '\n'):
             professionsText = ' knows' + professionsText
         requestText = (user + ', ' if not user == '' else '') + str(data['name']) + ' the level ' + str(data['level']) + ' ' + ResolveRaceID(int(data['race'])) + ' ' + ResolveClassID(int(data['class'])) + professionsText
         imagelink = 'http://render-eu.worldofwarcraft.com/character/' + data['thumbnail'] + '?apikey=' + keyConfig.get('WOW', 'KEY')
