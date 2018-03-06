@@ -9,10 +9,18 @@ retry_on_telegram_error = main.load_code_as_module('retry_on_telegram_error')
 def run(bot, chat_id, user, keyConfig, message, total_requested_results=1):
     requestText = str(message).strip()
 
-    url = 'https://eu.api.battle.net/wow/character/jaedenar/' + requestText + '?locale=en_US&apikey=' + keyConfig.get('WOW', 'KEY')
+    url = 'https://eu.api.battle.net/wow/character/jaedenar/' + requestText + '?fields=professions&locale=en_US&apikey=' + keyConfig.get('WOW', 'KEY')
     data = json.load(urllib.urlopen(url))
-    if 'Error' not in data and 'thumbnail' in data and not data['thumbnail'] == 'N/A':
-        requestText = (user + ', ' if not user == '' else '') + str(data['name']) + ' the level ' + str(data['level']) + ' ' + ResolveRaceID(int(data['race'])) + ' ' + ResolveClassID(int(data['class']))
+    if 'Error' not in data and 'thumbnail' in data and not data['thumbnail'] == 'N/A' and 'level' in data and 'name' in data and 'race' in data and 'class' in data and 'professions' in data:
+        professionsText = ' knows\n'
+        if 'primary' in data['professions'] and len(data['professions']['primary']) > 0:
+            for prof in data['professions']['primary']:
+                if ('name' in prof and 'rank' in prof):
+                    professionsText += str(prof['name']) + ': ' + str(prof['rank']) + '\n'
+            for prof in data['professions']['secondary']:
+                if ('name' in prof and 'rank' in prof):
+                    professionsText += str(prof['name']) + ': ' + str(prof['rank']) + '\n'
+        requestText = (user + ', ' if not user == '' else '') + str(data['name']) + ' the level ' + str(data['level']) + ' ' + ResolveRaceID(int(data['race'])) + ' ' + ResolveClassID(int(data['class'])) + professionsText
         imagelink = 'http://render-eu.worldofwarcraft.com/character/' + data['thumbnail'] + '?apikey=' + keyConfig.get('WOW', 'KEY')
         retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
         return requestText + '\n' + imagelink
