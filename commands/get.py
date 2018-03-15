@@ -185,25 +185,25 @@ def Image_Tags(imagelink, keyConfig):
             if strAdult == 'POSSIBLE' or \
                 strAdult == 'LIKELY' or \
                 strAdult == 'VERY_LIKELY':
-                tags += ' porn, '
+                tags += 'porn, '
             else:
                 strViolence = visionData['responses'][0]['safeSearchAnnotation']['violence']
                 if strAdult == 'POSSIBLE' or \
                     strViolence == 'LIKELY' or \
                     strViolence == 'VERY_LIKELY':
-                    tags += ' gore, '
+                    tags += 'gore, '
                 else:
                     strMedical = visionData['responses'][0]['safeSearchAnnotation']['medical']
                     if strAdult == 'POSSIBLE' or \
                         strMedical == 'LIKELY' or \
                         strMedical == 'VERY_LIKELY':
-                        tags += ' a medical procedure, '
+                        tags += 'a medical procedure, '
                     else:
                         strSpoof = visionData['responses'][0]['safeSearchAnnotation']['spoof']
                         if strAdult == 'POSSIBLE' or \
                             strSpoof == 'LIKELY' or \
                             strSpoof == 'VERY_LIKELY':
-                            tags += ' a meme, '
+                            tags += 'a meme, '
             if ('webEntities' in webDetection):
                 for entity in webDetection['webEntities']:
                     if 'description' in entity:
