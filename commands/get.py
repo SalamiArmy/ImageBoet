@@ -182,29 +182,24 @@ def Image_Tags(imagelink, keyConfig):
         if 'error' not in visionData['responses'][0]:
             webDetection = visionData['responses'][0]['webDetection']
             strAdult = visionData['responses'][0]['safeSearchAnnotation']['adult']
-            if strAdult == 'POSSIBLE' or \
-                strAdult == 'LIKELY' or \
+            if strAdult == 'LIKELY' or \
                 strAdult == 'VERY_LIKELY':
-                tags += strAdult.replace('VERY_LIKELY', '').lower() + ' obscene adult content, '
+                tags += ' porn, '
             else:
                 strViolence = visionData['responses'][0]['safeSearchAnnotation']['violence']
-                if strViolence == 'POSSIBLE' or \
-                    strViolence == 'LIKELY' or \
+                if strViolence == 'LIKELY' or \
                     strViolence == 'VERY_LIKELY':
-                    tags += strViolence.replace('VERY_LIKELY', '').lower() + ' offensive violence, '
+                    tags += ' gore, '
                 else:
                     strMedical = visionData['responses'][0]['safeSearchAnnotation']['medical']
-                    if strMedical == 'POSSIBLE' or \
-                        strMedical == 'LIKELY' or \
+                    if strMedical == 'LIKELY' or \
                         strMedical == 'VERY_LIKELY':
-                        tags += strMedical.replace('VERY_LIKELY', '').lower() + ' shocking medical content, '
+                        tags += ' a medical procedure, '
                     else:
                         strSpoof = visionData['responses'][0]['safeSearchAnnotation']['spoof']
-                        if strSpoof == 'POSSIBLE' or \
-                            strSpoof == 'LIKELY' or \
+                        if strSpoof == 'LIKELY' or \
                             strSpoof == 'VERY_LIKELY':
-                            strengthOfTag = strSpoof.replace('VERY_LIKELY', '').lower()
-                            tags += 'a' + (' ' + strengthOfTag if strengthOfTag != '' else '') + ' meme, '
+                            tags += ' a meme, '
             if ('webEntities' in webDetection):
                 for entity in webDetection['webEntities']:
                     if 'description' in entity:
