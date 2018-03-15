@@ -182,22 +182,26 @@ def Image_Tags(imagelink, keyConfig):
         if 'error' not in visionData['responses'][0]:
             webDetection = visionData['responses'][0]['webDetection']
             strAdult = visionData['responses'][0]['safeSearchAnnotation']['adult']
-            if strAdult == 'LIKELY' or \
+            if strAdult == 'POSSIBLE' or \
+                strAdult == 'LIKELY' or \
                 strAdult == 'VERY_LIKELY':
                 tags += ' porn, '
             else:
                 strViolence = visionData['responses'][0]['safeSearchAnnotation']['violence']
-                if strViolence == 'LIKELY' or \
+                if strAdult == 'POSSIBLE' or \
+                    strViolence == 'LIKELY' or \
                     strViolence == 'VERY_LIKELY':
                     tags += ' gore, '
                 else:
                     strMedical = visionData['responses'][0]['safeSearchAnnotation']['medical']
-                    if strMedical == 'LIKELY' or \
+                    if strAdult == 'POSSIBLE' or \
+                        strMedical == 'LIKELY' or \
                         strMedical == 'VERY_LIKELY':
                         tags += ' a medical procedure, '
                     else:
                         strSpoof = visionData['responses'][0]['safeSearchAnnotation']['spoof']
-                        if strSpoof == 'LIKELY' or \
+                        if strAdult == 'POSSIBLE' or \
+                            strSpoof == 'LIKELY' or \
                             strSpoof == 'VERY_LIKELY':
                             tags += ' a meme, '
             if ('webEntities' in webDetection):
