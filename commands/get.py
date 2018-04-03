@@ -108,7 +108,7 @@ def is_valid_image(image_url, chat_id):
     if image_url != '' and \
             not image_url.startswith('x-raw-image:///') and \
             not wasPreviouslySeenImage(image_url, chat_id):
-        return GetImageFile(image_url)
+        return IsValidImageFile(image_url, chat_id)
     return False
 
 def ImageIsSmallEnough(image_file):
@@ -123,7 +123,7 @@ def ImageHasUniqueHashDigest(image_as_string, chat_id):
         logging.info('Hash collision!')
     return not hashed_before
 
-def GetImageFile(image_url):
+def IsValidImageFile(image_url, chat_id):
     global image_file, fd
     try:
         fd = urllib.urlopen(image_url)
