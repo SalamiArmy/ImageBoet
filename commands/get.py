@@ -108,8 +108,7 @@ def is_valid_image(image_url, chat_id):
     if image_url != '' and \
             not image_url.startswith('x-raw-image:///') and \
             not wasPreviouslySeenImage(image_url, chat_id):
-        image_file, image_file_value = GetImageFile(image_url)
-        return ImageIsSmallEnough(image_file) and ImageHasUniqueHashDigest(image_file_value, chat_id)
+        return GetImageFile(image_url)
     return False
 
 def ImageIsSmallEnough(image_file):
@@ -132,7 +131,7 @@ def GetImageFile(image_url):
     except IOError:
         return False
     else:
-        return image_file, image_file.getvalue()
+        return ImageIsSmallEnough(image_file) and ImageHasUniqueHashDigest(image_file.getvalue(), chat_id)
     finally:
         try:
             if image_file:
