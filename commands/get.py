@@ -205,7 +205,10 @@ def Image_Tags(imagelink, keyConfig):
                             tags += 'a meme, '
             if ('webEntities' in webDetection):
                 for entity in webDetection['webEntities']:
-                    if 'description' in entity:
+                    if 'description' in entity 
+                    and str(entity['description']) != 'GIF' 
+                    and str(entity['description']) != 'Giphy' 
+                    and str(entity['description']) != 'Gfycat':
                         tags += str(entity['description']) + ', '
         else:
             if visionData['responses'][0]['error']['message'][:10] == 'Image size' and visionData['responses'][0]['error']['message'][19:] == 'exceeding allowed max (4.00M).':
