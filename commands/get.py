@@ -205,9 +205,9 @@ def Image_Tags(imagelink, keyConfig):
                             tags += 'a meme, '
             if ('webEntities' in webDetection):
                 for entity in webDetection['webEntities']:
-                    if 'description' in entity 
-                    and str(entity['description']) != 'GIF' 
-                    and str(entity['description']) != 'Giphy' 
+                    if 'description' in entity \
+                    and str(entity['description']) != 'GIF' \
+                    and str(entity['description']) != 'Giphy' \
                     and str(entity['description']) != 'Gfycat':
                         tags += str(entity['description']) + ', '
         else:
