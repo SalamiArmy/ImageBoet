@@ -209,7 +209,11 @@ def Image_Tags(imagelink, keyConfig):
                     and str(entity['description']) != 'GIF' \
                     and str(entity['description']) != 'Giphy' \
                     and str(entity['description']) != 'Gfycat' \
-                    and str(entity['description']) != 'WebM':
+                    and str(entity['description']) != 'WebM' \
+                    and str(entity['description']) != 'Ogg' \
+                    and str(entity['description']) != 'File format' \
+                    and str(entity['description']) != 'Internet media type' \
+                    and str(entity['description']) != 'MIME':
                         tags += str(entity['description']) + ', '
         else:
             if visionData['responses'][0]['error']['message'][:10] == 'Image size' and visionData['responses'][0]['error']['message'][19:] == 'exceeding allowed max (4.00M).':
