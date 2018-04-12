@@ -214,7 +214,8 @@ def Image_Tags(imagelink, keyConfig):
                     and str(entity['description']) != 'File format' \
                     and str(entity['description']) != 'Internet media type' \
                     and str(entity['description']) != 'MIME' \
-                    and str(entity['description']) != 'Image':
+                    and str(entity['description']) != 'Image' \
+                    and str(entity['description']) != 'Imgur':
                         tags += str(entity['description']) + ', '
         else:
             if visionData['responses'][0]['error']['message'][:10] == 'Image size' and visionData['responses'][0]['error']['message'][19:] == 'exceeding allowed max (4.00M).':
