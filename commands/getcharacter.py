@@ -28,7 +28,6 @@ def run(bot, chat_id, user, keyConfig, message, total_requested_results=1):
                       ' is wearing level ' + str(data['items']['averageItemLevelEquipped']) + ' gear' + professionsText
         imagelink = 'http://render-eu.worldofwarcraft.com/character/' + data['thumbnail'] + '?apikey=' + keyConfig.get('WOW', 'KEY')
         retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
-        bot.sendMessage(chat_id=chat_id, text=requestText)
         return requestText + '\n' + imagelink
     else:
         return 'I\'m sorry ' + (
