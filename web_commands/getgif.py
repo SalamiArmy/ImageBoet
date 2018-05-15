@@ -81,9 +81,9 @@ def search_results_walker(args, data, number, requestText, results_this_page, to
         total_offset += 1
         if '?' in imagelink:
             imagelink = imagelink[:imagelink.index('?')]
-        if is_valid_gif(imagelink, chat_id):
+        if is_valid_gif(imagelink):
             if number == 1:
-                if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
+                if retry_on_telegram_error.SendDocumentWithRetry(imagelink, requestText):
                     total_sent.append(get.get_url_and_tags(imagelink, keyConfig, requestText))
             else:
                 total_sent.append(requestText + ': ' + (str(len(total_sent) + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink)
