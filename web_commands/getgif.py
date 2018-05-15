@@ -10,9 +10,9 @@ from PIL import Image
 CommandName = 'getgif'
 
 retry_on_telegram_error = main.get_platform_command_code('telegram', 'retry_on_telegram_error')
-get = main.get_platform_command_code('telegram', 'get')
+get = main.get_platform_command_code('web', 'get')
 
-def run(bot, chat_id, user, keyConfig, message, totalResults=1):
+def run(keyConfig, message, totalResults=1):
     requestText = str(message).replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
@@ -21,11 +21,11 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'q': requestText,
             'fileType': 'gif',
             'start': 1}
-    return Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults)
+    return Send_Animated_Gifs(requestText, args, keyConfig, totalResults)
 
 
-def is_valid_gif(imagelink, chat_id):
-    if not get.wasPreviouslySeenImage(imagelink, chat_id):
+def is_valid_gif(imagelink):
+    if not get.wasPreviouslySeenImage(imagelink):
         global gif, image_file, fd
         try:
             fd = urllib.urlopen(imagelink)
@@ -40,7 +40,7 @@ def is_valid_gif(imagelink, chat_id):
                 pass
             else:
                 return int(sys.getsizeof(image_file)) < 10000000 and \
-                       get.ImageHasUniqueHashDigest(image_file.getvalue(), chat_id)
+                       get.ImageHasUniqueHashDigest(image_file.getvalue())
         finally:
             try:
                 if gif:
@@ -54,31 +54,25 @@ def is_valid_gif(imagelink, chat_id):
             except NameError:
                 print("gif, image_file or fd global not defined")
 
-def Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults=1):
+def Send_Animated_Gifs(requestText, args, keyConfig, totalResults=1):
     data, total_results, results_this_page = get.Google_Custom_Search(args)
     if 'items' in data and int(total_results) > 0:
-        total_sent = search_results_walker(args, bot, chat_id, data, totalResults, user + ', ' + requestText, results_this_page, total_results, keyConfig)
+        total_sent = search_results_walker(args, data, totalResults, requestText, results_this_page, total_results, keyConfig)
         if len(total_sent) < int(totalResults):
             if int(totalResults) > 1:
-                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                      ', I\'m afraid I can\'t find any more gifs for ' +
-                                                      string.capwords(requestText.encode('utf-8')) + '.' +
-                                                      ' I could only find ' + str(len(total_sent)) + ' out of ' +
-                                                      str(totalResults))
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry Dave, I\'m afraid I can\'t find any more gifs for ' +
+                                                      requestText + '. I could only find ' + 
+                                str(len(total_sent)) + ' out of ' + str(totalResults))
             else:
-                bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                      ', I\'m afraid I can\'t find a gif for ' +
-                                                      string.capwords(requestText.encode('utf-8')) +
-                                                      '.'.encode('utf-8'))
+                bot.sendMessage(chat_id=chat_id, text='I\'m sorry Dave, I\'m afraid I can\'t find a gif for ' +
+                                                      requestText + '.')
         return total_sent
     else:
-        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                   ', I\'m afraid I can\'t find a gif for ' + \
-                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8')
+        errorMsg = 'I\'m sorry Dave, I\'m afraid I can\'t find a gif for ' + requestText + '.'
         bot.sendMessage(chat_id=chat_id, text=errorMsg)
         return [errorMsg]
 
-def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
+def search_results_walker(args, data, number, requestText, results_this_page, total_results, keyConfig,
                           total_sent=[], total_offset=0):
     offset_this_page = 0
     while len(total_sent) < int(number) and int(offset_this_page) < int(results_this_page):
@@ -91,16 +85,13 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
         if is_valid_gif(imagelink, chat_id):
             if number == 1:
                 if retry_on_telegram_error.SendDocumentWithRetry(bot, chat_id, imagelink, requestText):
-                    total_sent.append(imagelink)
-                    get.send_url_and_tags(bot, chat_id, imagelink, keyConfig, requestText)
+                    total_sent.append(get.get_url_and_tags(imagelink, keyConfig, requestText))
             else:
-                message = requestText + ': ' + (str(len(total_sent) + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
-                bot.sendMessage(chat_id, message)
-                total_sent.append(imagelink)
+                total_sent.append(requestText + ': ' + (str(len(total_sent) + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink)
     if len(total_sent) < int(number) and int(total_offset) < int(total_results):
         args['start'] = total_offset + 1
         data, total_results, results_this_page = get.Google_Custom_Search(args)
-        return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
+        return search_results_walker(args, data, number, requestText, results_this_page, total_results, keyConfig,
                                      total_sent, total_offset)
     return total_sent
 
