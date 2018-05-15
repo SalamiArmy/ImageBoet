@@ -95,11 +95,11 @@ def is_valid_image(image_url):
         return IsValidImageFile(image_url)
     return False
 
-def ImageHasUniqueHashDigest(image_as_string, chat_id):
+def ImageHasUniqueHashDigest(image_as_string):
     image_as_hash = hashlib.md5(image_as_string)
     image_hash_digest = image_as_hash.hexdigest()
     logging.info('hashed image as ' + image_hash_digest)
-    hashed_before = wasPreviouslySeenHash(image_hash_digest, chat_id)
+    hashed_before = wasPreviouslySeenHash(image_hash_digest)
     if hashed_before:
         logging.info('Hash collision!')
     return not hashed_before
