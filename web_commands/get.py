@@ -134,7 +134,7 @@ def Send_Images(requestText, args, keyConfig, total_number_to_send=1):
             if int(total_number_to_send) > 1:
                 total_sent.append('I\'m sorry Dave, I\'m afraid I can\'t find any more images for ' + \
                                                       requestText + '. I could only find ' + str(
-                                                          len(total_sent)) + ' out of ' + str(total_number_to_send)))
+                                                          len(total_sent)) + ' out of ' + str(total_number_to_send))
             else:
                 total_sent.append('I\'m sorry Dave, I\'m afraid I can\'t find any images for ' + requestText)
         return total_sent
