@@ -21,37 +21,31 @@ telegram_get = main.get_platform_command_code('telegram', 'get')
 
 CommandName = 'get'
 
-class WhosSeenImageUrls(ndb.Model):
+class SeenImageUrls(ndb.Model):
     # key name: ImageUrl
-    seenImage = ndb.BooleanProperty(indexed=False, default='')
+    seenImage = ndb.BooleanProperty(indexed=False, default=False)
 
-class WhosSeenHashDigests(ndb.Model):
+class SeenHashDigests(ndb.Model):
     # key name: ImageHash
-    seenHash = ndb.BooleanProperty(indexed=False, default='')
+    seenHash = ndb.BooleanProperty(indexed=False, default=False)
 
 # ================================
 
 def addPreviouslySeenImagesValue(image_url):
-    es = WhosSeenImageUrls.get_or_insert(image_url)
+    es = SeenImageUrls.get_or_insert(image_url)
     es.seenImage = True
     es.put()
 
 def addPreviouslySeenHashDigest(image_hash):
-    es = WhosSeenHashDigests.get_or_insert(image_hash)
+    es = SeenHashDigests.get_or_insert(image_hash)
     es.seenHash = True
     es.put()
 
 def getSeenImagesValue(image_link):
-    es = WhosSeenImageUrls.get_or_insert(image_link)
-    if es:
-        return es.whoseSeenImage
-    return ''
+    return SeenImageUrls.get_or_insert(image_link)
 
 def getSeenHashDigest(image_hash):
-    es = WhosSeenHashDigests.get_or_insert(image_hash)
-    if es:
-        return es.whoseSeenHash
-    return ''
+    return SeenHashDigests.get_or_insert(image_hash)
 
 
 def wasPreviouslySeenImage(image_link):
