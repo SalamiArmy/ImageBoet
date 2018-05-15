@@ -2,7 +2,7 @@ import ConfigParser
 import unittest
 import telegram
 
-import commands.gethugegif as gethugegif
+import telegram_commands.gethugegif as gethugegif
 
 
 class TestGetHugeGif(unittest.TestCase):

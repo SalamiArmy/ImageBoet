@@ -1,9 +1,11 @@
 import base64
-import add
 import json
 import logging
 
 from google.appengine.api import urlfetch
+
+import add
+
 
 def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
     if chat_id == keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID') or \
@@ -29,25 +31,25 @@ def run(bot, chat_id, user='Dave', keyConfig=None, message='', totalResults=1):
                 else:
                     bot.sendMessage(chat_id=chat_id, text='Wrong token in request.')
             else:
-                bot.sendMessage(chat_id=chat_id, text='The commands at ' + repo_url +
+                bot.sendMessage(chat_id=chat_id, text='The telegram_commands at ' + repo_url +
                                                       ' have not been hooked.')
         else:
             bot.sendMessage(chat_id=chat_id, text='A Github token is required. ' +
-                                                  'With permission to list all commands in the repo ' +
+                                                  'With permission to list all telegram_commands in the repo ' +
                                                   'and delete hooks.')
     else:
         bot.sendMessage(chat_id=chat_id, text='GitHub Command Hooking reserved for admins only.')
 
 def remove_commands(self, repo_url, token):
     raw_data = urlfetch.fetch(url='https://api.github.com/repos/' +
-                                  repo_url + '/contents/commands',
+                                  repo_url + '/contents/telegram_commands',
                               headers={'Authorization': 'Basic %s' % base64.b64encode(
                                   repo_url.split('/')[0] + ':' + token)})
     logging.info('Got raw_data as ' + raw_data.content)
     json_data = json.loads(raw_data.content)
     if json_data and len(json_data) > 0:
         if 'message' not in json_data:
-            logging.info('more than 0 commands found!')
+            logging.info('more than 0 telegram_commands found!')
             for command_data in json_data:
                 logging.info('Got command_data as ')
                 logging.info(command_data)

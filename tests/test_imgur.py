@@ -2,7 +2,7 @@ import ConfigParser
 import unittest
 import telegram
 
-import commands.imgur as imgur
+import telegram_commands.imgur as imgur
 
 
 class TestImgur(unittest.TestCase):

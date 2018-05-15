@@ -1,10 +1,12 @@
 import ConfigParser
 import unittest
-import telegram
 
-from commands import add
+import telegram
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
+
+from commands import add
+
 
 class TestGetHow(unittest.TestCase):
     def setUp(self):
@@ -32,9 +34,9 @@ class TestGetHow(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        add.setCommandCode('get', open('../commands/get.py').read())
+        add.setCommandCode('get', open('../telegram_commands/get.py').read())
 
-        import commands.how as how
+        import telegram_commands.how as how
         bot.sendMessage(chat_id=chatId, text=how.run('Admin', requestText, chatId, 2))
 
     def test_how_group(self):
@@ -46,8 +48,8 @@ class TestGetHow(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TESTING_TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
-        add.setCommandCode('get', open('../commands/get.py').read())
+        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
+        add.setCommandCode('get', open('../telegram_commands/get.py').read())
 
-        import commands.how as how
+        import telegram_commands.how as how
         bot.sendMessage(chat_id=chatId, text=how.run('Admin', requestText, chatId))

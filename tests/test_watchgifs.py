@@ -3,8 +3,8 @@ import unittest
 
 import telegram
 
-import commands.watchgifs as watchgifs
-#import commands.getgif as getgif
+import telegram_commands.watchgifs as watchgifs
+#import telegram_commands.getgif as getgif
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 

@@ -3,7 +3,7 @@ import unittest
 
 import telegram
 
-import commands.getfig as getfig
+import telegram_commands.getfig as getfig
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 

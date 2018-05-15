@@ -2,7 +2,7 @@ import ConfigParser
 import unittest
 import telegram
 
-import commands.giphy as giphy
+import telegram_commands.giphy as giphy
 
 
 class TestGiphy(unittest.TestCase):

@@ -1,10 +1,12 @@
 import ConfigParser
 import unittest
-import telegram
 
-from commands import add
+import telegram
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
+
+from commands import add
+
 
 class TestGetXXX(unittest.TestCase):
     def setUp(self):
@@ -32,9 +34,9 @@ class TestGetXXX(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        add.setCommandCode('get', open('../commands/get.py').read())
+        add.setCommandCode('get', open('../telegram_commands/get.py').read())
 
-        import commands.getxxx as getxxx
+        import telegram_commands.getxxx as getxxx
         getxxx.run(bot, chatId, 'Admin', keyConfig, requestText, 2)
 
     def test_getxxx_group(self):
@@ -46,9 +48,9 @@ class TestGetXXX(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TESTING_TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
-        add.setCommandCode('get', open('../commands/get.py').read())
+        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
+        add.setCommandCode('get', open('../telegram_commands/get.py').read())
 
-        import commands.getxxx as getxxx
+        import telegram_commands.getxxx as getxxx
         if getxxx.run(bot, chatId, 'Admin', keyConfig, requestText) is None:
             raise Exception

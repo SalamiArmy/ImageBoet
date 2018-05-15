@@ -3,7 +3,7 @@ import unittest
 
 import telegram
 
-import commands.watch as watch
+import telegram_commands.watch as watch
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 

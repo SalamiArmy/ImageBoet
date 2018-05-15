@@ -1,12 +1,13 @@
 # coding=utf-8
 import ConfigParser
 import unittest
+
 import telegram
+from google.appengine.ext import ndb
+from google.appengine.ext import testbed
 
 from commands import add
 
-from google.appengine.ext import ndb
-from google.appengine.ext import testbed
 
 class TestGet(unittest.TestCase):
     def setUp(self):
@@ -34,9 +35,9 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
+        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
 
-        from commands import get
+        from telegram_commands import get
         get.run(bot, chatId, 'Admin', keyConfig, requestText, 11)
 
     def test_single_get(self):
@@ -48,7 +49,21 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
+        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
 
-        from commands import get
+        from telegram_commands import get
+        get.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
+
+    def test_group_get(self):
+        requestText = 'Tara Reid\'s tits'
+
+        keyConfig = ConfigParser.ConfigParser()
+        keyConfig.read(["keys.ini", "..\keys.ini"])
+        keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
+        bot = telegram.Bot(keyConfig.get('BotIDs', 'TESTING_TELEGRAM_BOT_ID'))
+        chatId = keyConfig.get('BotAdministration', 'TESTING_GROUP_CHAT_ID')
+
+        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
+
+        from telegram_commands import get
         get.run(bot, chatId, 'Admin', keyConfig, requestText, 1)

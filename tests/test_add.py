@@ -1,10 +1,12 @@
 import ConfigParser
 import unittest
-import telegram
 
-import commands.add as add
+import telegram
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
+
+import commands.add as add
+
 
 class TestAdd(unittest.TestCase):
     def setUp(self):

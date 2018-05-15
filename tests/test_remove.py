@@ -1,13 +1,15 @@
 import ConfigParser
 import unittest
-import telegram
 
-import commands.remove as remove
-import commands.add as add
 import integration_tests.command_codes as command_codes
-import main
+import telegram
+import telegram_commands.remove as remove
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
+
+import commands.add as add
+import main
+
 
 class TestRemove(unittest.TestCase):
     def setUp(self):

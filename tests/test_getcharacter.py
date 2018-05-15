@@ -1,12 +1,13 @@
 # coding=utf-8
 import ConfigParser
 import unittest
+
 import telegram
+from google.appengine.ext import ndb
+from google.appengine.ext import testbed
 
 from commands import add
 
-from google.appengine.ext import ndb
-from google.appengine.ext import testbed
 
 class TestGet(unittest.TestCase):
     def setUp(self):
@@ -34,7 +35,7 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
+        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
 
-        from commands import getcharacter
+        from telegram_commands import getcharacter
         getcharacter.run(bot, chatId, 'Admin', keyConfig, requestText, 1)

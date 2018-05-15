@@ -3,7 +3,7 @@ import unittest
 
 import telegram
 
-import commands.gettopgif as gettopgif
+import telegram_commands.gettopgif as gettopgif
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 

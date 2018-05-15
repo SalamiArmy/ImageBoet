@@ -2,10 +2,10 @@ import ConfigParser
 import unittest
 
 import telegram
-from commands import add
-
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
+
+from commands import add
 
 
 class TestGet(unittest.TestCase):
@@ -33,10 +33,10 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('Telegram', 'TELE_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_PRIVATE_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../commands/retry_on_telegram_error.py').read())
-        add.setCommandCode('get', open('../commands/get.py').read())
-        add.setCommandCode('getgif', open('../commands/getgif.py').read())
-        add.setCommandCode('watch', open('../commands/watch.py').read())
+        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
+        add.setCommandCode('get', open('../telegram_commands/get.py').read())
+        add.setCommandCode('getgif', open('../telegram_commands/getgif.py').read())
+        add.setCommandCode('watch', open('../telegram_commands/watch.py').read())
 
-        import commands.watchgif as watchgif
+        import telegram_commands.watchgif as watchgif
         watchgif.run(bot, chatId, 'SalamiArmy', keyConfig, requestText)
