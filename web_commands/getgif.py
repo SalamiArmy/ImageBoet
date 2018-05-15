@@ -13,15 +13,14 @@ retry_on_telegram_error = main.get_platform_command_code('telegram', 'retry_on_t
 get = main.get_platform_command_code('web', 'get')
 
 def run(keyConfig, message, totalResults=1):
-    requestText = str(message).replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
             'searchType': 'image',
             'safe': "off",
-            'q': requestText,
+            'q': str(message),
             'fileType': 'gif',
             'start': 1}
-    return Send_Animated_Gifs(requestText, args, keyConfig, totalResults)
+    return Send_Animated_Gifs(str(message), args, keyConfig, totalResults)
 
 
 def is_valid_gif(imagelink):
