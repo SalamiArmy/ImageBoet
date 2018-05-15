@@ -54,6 +54,18 @@ class TestGet(unittest.TestCase):
         from telegram_commands import get
         get.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
 
+    def test_single_web_get(self):
+        requestText = 'fail'
+
+        keyConfig = ConfigParser.ConfigParser()
+        keyConfig.read(["keys.ini", "..\keys.ini"])
+        keyConfig.read(["bot_keys.ini", "..\\bot_keys.ini"])
+
+        add.setTelegram_CommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
+
+        from web_commands import get
+        print(get.run(keyConfig, requestText, 1))
+
     def test_group_get(self):
         requestText = 'Tara Reid\'s tits'
 

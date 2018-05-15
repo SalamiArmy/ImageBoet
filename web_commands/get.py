@@ -42,10 +42,12 @@ def addPreviouslySeenHashDigest(image_hash):
     es.put()
 
 def getSeenImagesValue(image_link):
-    return SeenImageUrls.get_or_insert(image_link)
+    es = SeenImageUrls.get_or_insert(image_link)
+    return es.seenImage
 
 def getSeenHashDigest(image_hash):
-    return SeenHashDigests.get_or_insert(image_hash)
+    es = SeenHashDigests.get_or_insert(image_hash)
+    return es.seenHash
 
 
 def wasPreviouslySeenImage(image_link):
