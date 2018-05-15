@@ -133,20 +133,17 @@ def Send_Images(requestText, args, keyConfig, total_number_to_send=1):
         if len(total_sent) < int(total_number_to_send):
             if int(total_number_to_send) > 1:
                 total_sent.append('I\'m sorry Dave, I\'m afraid I can\'t find any more images for ' + \
-                                                      string.capwords(requestText.encode('utf-8') + '.'
-                                                                      ' I could only find ' + str(
+                                                      requestText + '. I could only find ' + str(
                                                           len(total_sent)) + ' out of ' + str(total_number_to_send)))
             else:
-                total_sent.append('I\'m sorry Dave, I\'m afraid I can\'t find any images for ' + \
-                                                      string.capwords(requestText.encode('utf-8')))
+                total_sent.append('I\'m sorry Dave, I\'m afraid I can\'t find any images for ' + requestText)
         return total_sent
     else:
         if 'error' in data:
             errorMsg = 'I\'m sorry Dave' + data['error']['message']
             return [errorMsg]
         else:
-            errorMsg = 'I\'m sorry Dave, I\'m afraid I can\'t find any images for ' + \
-                       string.capwords(requestText.encode('utf-8'))
+            errorMsg = 'I\'m sorry Dave, I\'m afraid I can\'t find any images for ' + requestText
             return [errorMsg]
 
 def search_results_walker(args, data, number, requestText, results_this_page, total_results, keyConfig,
