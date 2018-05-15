@@ -4,7 +4,7 @@ import ConfigParser
 from google.appengine.ext import ndb
 
 import main
-get = main.load_code_as_module('get')
+get = main.get_platform_command_code('telegram', 'get')
 
 CommandName = 'how'
 

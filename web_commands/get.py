@@ -16,8 +16,8 @@ from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 
 import main
-retry_on_telegram_error = main.load_code_as_module('retry_on_telegram_error')
-telegram_get = main.load_code_as_module('get')
+retry_on_telegram_error = main.get_platform_command_code('telegram', 'retry_on_telegram_error')
+telegram_get = main.get_platform_command_code('telegram', 'get')
 
 CommandName = 'get'
 

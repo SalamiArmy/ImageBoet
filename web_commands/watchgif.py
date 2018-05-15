@@ -1,7 +1,7 @@
 # coding=utf-8
 import main
-getgif = main.load_code_as_module('getgif')
-watch = main.load_code_as_module('watch')
+getgif = main.get_platform_command_code('telegram', 'getgif')
+watch = main.get_platform_command_code('telegram', 'watch')
 
 def run(bot, chat_id, user, keyConfig, message, num_to_send=1):
     requestText = message.replace(bot.name, "").strip()

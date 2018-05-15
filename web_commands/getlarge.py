@@ -1,6 +1,6 @@
 # coding=utf-8
 import main
-get = main.load_code_as_module('get')
+get = main.get_platform_command_code('telegram', 'get')
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):

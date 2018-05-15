@@ -1,6 +1,6 @@
 # coding=utf-8
 import main
-getgif = main.load_code_as_module('getgif')
+getgif = main.get_platform_command_code('telegram', 'getgif')
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):

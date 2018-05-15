@@ -34,8 +34,8 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
-        add.setCommandCode('get', open('../telegram_commands/get.py').read())
+        add.setTelegram_CommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
+        add.setTelegram_CommandCode('get', open('../telegram_commands/get.py').read())
 
         keyConfig.read(['keys.ini', '..\\keys.ini'])
 
@@ -50,8 +50,8 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_PRIVATE_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
-        add.setCommandCode('get', open('../telegram_commands/get.py').read())
+        add.setTelegram_CommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
+        add.setTelegram_CommandCode('get', open('../telegram_commands/get.py').read())
 
         keyConfig.read(['keys.ini', '..\\keys.ini'])
 
@@ -66,8 +66,8 @@ class TestGet(unittest.TestCase):
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TESTING_TELEGRAM_BOT_ID'))
         chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID')
 
-        add.setCommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
-        add.setCommandCode('get', open('../telegram_commands/get.py').read())
+        add.setTelegram_CommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
+        add.setTelegram_CommandCode('get', open('../telegram_commands/get.py').read())
 
         keyConfig.read(['keys.ini', '..\\keys.ini'])
 

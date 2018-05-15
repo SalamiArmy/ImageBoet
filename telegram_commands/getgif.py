@@ -7,16 +7,16 @@ import main
 import sys
 from PIL import Image
 
-retry_on_telegram_error = main.load_code_as_module('retry_on_telegram_error')
-get = main.load_code_as_module('get')
-
 CommandName = 'getgif'
+
+retry_on_telegram_error = main.get_platform_command_code('telegram', 'retry_on_telegram_error')
+get = main.get_platform_command_code('telegram', 'get')
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = str(message).replace(bot.name, "").strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
-            'searchType': "image",
+            'searchType': 'image',
             'safe': "off",
             'q': requestText,
             'fileType': 'gif',

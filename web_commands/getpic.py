@@ -1,9 +1,9 @@
 # coding=utf-8
 import main
-getlarge = main.load_code_as_module('getlarge')
-getxlarge = main.load_code_as_module('getxlarge')
-getxxlarge = main.load_code_as_module('getxxlarge')
-gethuge = main.load_code_as_module('gethuge')
+getlarge = main.get_platform_command_code('telegram', 'getlarge')
+getxlarge = main.get_platform_command_code('telegram', 'getxlarge')
+getxxlarge = main.get_platform_command_code('telegram', 'getxxlarge')
+gethuge = main.get_platform_command_code('telegram', 'gethuge')
 
 
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):

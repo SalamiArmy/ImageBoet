@@ -5,7 +5,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 from telegram_commands import retry_on_telegram_error
 import main
-getgif = main.load_code_as_module('getgif')
+getgif = main.get_platform_command_code('telegram', 'getgif')
 
 watchedCommandName = 'watchgifs'
 

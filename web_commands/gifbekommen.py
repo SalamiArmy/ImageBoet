@@ -1,3 +1,4 @@
-import telegram_commands.getgif as getgif
+import main
+getgif = main.get_platform_command_code('telegram', 'getgif')
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     return getgif.run(bot, chat_id, user, keyConfig, message, totalResults)
