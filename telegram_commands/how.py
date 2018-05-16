@@ -44,7 +44,7 @@ def wasPreviouslySeenWikiHowLink(chat_id, how_link):
     return False
 
 
-def run(user, message, chat_id='', totalResults=1):
+def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = str(message).strip()
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
