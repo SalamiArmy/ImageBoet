@@ -29,7 +29,7 @@ def addPreviouslySeenXXXValue(NewValue):
 def getPreviouslySeenXXXValue():
     es = SeenXXX.get_or_insert(CommandName)
     if es:
-        return es.allPreviousSeenXXX.encode('utf-8')
+        return es.allPreviousSeenXXX
     return ''
 
 def wasPreviouslySeenXXX(xxx_link):
