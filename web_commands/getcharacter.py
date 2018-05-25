@@ -6,7 +6,7 @@ import main
 retry_on_telegram_error = main.get_platform_command_code('telegram', 'retry_on_telegram_error')
 
 
-def run(bot, chat_id, user, keyConfig, message, total_requested_results=1):
+def run(keyConfig, message, totalResults=1):
     requestText = str(message).strip()
 
     url = 'https://eu.api.battle.net/wow/character/jaedenar/' + requestText + '?fields=professions+items&locale=en_US&apikey=' + keyConfig.get('WOW', 'KEY')
@@ -27,7 +27,6 @@ def run(bot, chat_id, user, keyConfig, message, total_requested_results=1):
                       ResolveRaceID(int(data['race'])) + ' ' + ResolveClassID(int(data['class'])) + \
                       ' is wearing level ' + str(data['items']['averageItemLevelEquipped']) + ' gear' + professionsText
         imagelink = 'http://render-eu.worldofwarcraft.com/character/' + data['thumbnail'] + '?apikey=' + keyConfig.get('WOW', 'KEY')
-        retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
         return requestText + '\n' + imagelink
     else:
         return 'I\'m sorry ' + (
