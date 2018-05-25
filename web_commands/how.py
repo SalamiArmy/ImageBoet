@@ -9,33 +9,32 @@ get = main.get_platform_command_code('telegram', 'get')
 CommandName = 'how'
 
 class SeenWikiHowLink(ndb.Model):
-    # key name: get:str(chat_id)
-    allPreviousSeenWikiHowLink = ndb.StringProperty(indexed=False, default='')
+    allPreviousSeenWikiHowLink = ndb.BooleanProperty(indexed=False, default=False)
 
 
 # ================================
 
-def setPreviouslySeenWikiHowLinkValue(chat_id, NewValue):
-    es = SeenWikiHowLink.get_or_insert(CommandName + ':' + str(chat_id))
+def setPreviouslySeenWikiHowLinkValue(NewValue):
+    es = SeenWikiHowLink.get_or_insert(CommandName)
     es.allPreviousSeenWikiHowLink = NewValue.encode('utf-8')
     es.put()
 
-def addPreviouslySeenWikiHowLinkValue(chat_id, NewValue):
-    es = SeenWikiHowLink.get_or_insert(CommandName + ':' + str(chat_id))
+def addPreviouslySeenWikiHowLinkValue(NewValue):
+    es = SeenWikiHowLink.get_or_insert(CommandName)
     if es.allPreviousSeenWikiHowLink == '':
         es.allPreviousSeenWikiHowLink = NewValue.encode('utf-8')
     else:
         es.allPreviousSeenWikiHowLink += ',' + NewValue.encode('utf-8')
     es.put()
 
-def getPreviouslySeenWikiHowLinkValue(chat_id):
-    es = SeenWikiHowLink.get_or_insert(CommandName + ':' + str(chat_id))
+def getPreviouslySeenWikiHowLinkValue():
+    es = SeenWikiHowLink.get_or_insert(CommandName)
     if es:
         return es.allPreviousSeenWikiHowLink.encode('utf-8')
     return ''
 
-def wasPreviouslySeenWikiHowLink(chat_id, how_link):
-    allPreviousLinks = getPreviouslySeenWikiHowLinkValue(chat_id)
+def wasPreviouslySeenWikiHowLink(how_link):
+    allPreviousLinks = getPreviouslySeenWikiHowLinkValue()
     if ',' + how_link + ',' in allPreviousLinks or \
             allPreviousLinks.startswith(how_link + ',') or  \
             allPreviousLinks.endswith(',' + how_link) or  \
@@ -44,16 +43,16 @@ def wasPreviouslySeenWikiHowLink(chat_id, how_link):
     return False
 
 
-def run(user, message, chat_id='', totalResults=1):
+def run(keyConfig, message, totalResults=1):
     requestText = str(message).strip()
     keyConfig = ConfigParser.ConfigParser()
     keyConfig.read(["keys.ini", "..\keys.ini"])
 
     args, data, results_this_page, total_results = search_gcse_for_how(keyConfig, requestText)
     if totalResults > 1:
-        return Send_WikiHowLinks(chat_id, user, requestText, data, total_results, results_this_page, totalResults, args)
+        return Send_WikiHowLinks(requestText, data, total_results, results_this_page, totalResults, args)
     else:
-        return Send_First_Valid_WikiHowLink(chat_id, user, requestText, data, total_results, results_this_page)
+        return Send_First_Valid_WikiHowLink(requestText, data, total_results, results_this_page)
 
 
 def search_gcse_for_how(keyConfig, requestText):
@@ -66,27 +65,26 @@ def search_gcse_for_how(keyConfig, requestText):
     return args, data, results_this_page, total_results
 
 
-def Send_First_Valid_WikiHowLink(chat_id, user, requestText, data, total_results, results_this_page):
+def Send_First_Valid_WikiHowLink(requestText, data, total_results, results_this_page):
     if data['searchInformation']['totalResults'] >= '1':
         sent_count = 0
         for item in data['items']:
             how_link = item['link']
-            if not wasPreviouslySeenWikiHowLink(chat_id, how_link):
-                addPreviouslySeenWikiHowLinkValue(chat_id, how_link)
+            if not wasPreviouslySeenWikiHowLink(how_link):
+                addPreviouslySeenWikiHowLinkValue(how_link)
                 if is_valid_how_link(how_link):
-                    how_text = (user + ', ' if not user == '' else '') + 'how ' + requestText + ': ' + how_link
+                    how_text = 'how ' + requestText + ': ' + how_link
                     sent_count += 1
                     return how_text
     else:
-        return 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-               ', I don\'t know how ' + requestText
+        return 'I\'m sorry Dave, I don\'t know how ' + requestText
 
 
 def is_valid_how_link(how_link):
     return 'www.wikihow.com/User:' not in how_link
 
 
-def Send_WikiHowLinks(chat_id, user, requestText, data, total_results, results_this_page, number, args):
+def Send_WikiHowLinks(requestText, data, total_results, results_this_page, number, args):
     if data['searchInformation']['totalResults'] >= '1':
         total_sent = ''
         total_offset = 0
@@ -94,8 +92,8 @@ def Send_WikiHowLinks(chat_id, user, requestText, data, total_results, results_t
             for item in data['items']:
                 xlink = item['link']
                 total_offset += 1
-                if is_valid_how_link(xlink) and not wasPreviouslySeenWikiHowLink(chat_id, xlink):
-                    addPreviouslySeenWikiHowLinkValue(chat_id, xlink)
+                if is_valid_how_link(xlink) and not wasPreviouslySeenWikiHowLink(xlink):
+                    addPreviouslySeenWikiHowLinkValue(xlink)
                     total_sent += ('\n' if total_sent != '' else '') + 'how ' + requestText + ' ' + str(len(total_sent.split('\n'))+1)\
                                                           + ' of ' + str(number) + ':' + xlink
                 if len(total_sent.split('\n')) >= int(number) or int(total_offset) >= int(total_results):
@@ -104,10 +102,8 @@ def Send_WikiHowLinks(chat_id, user, requestText, data, total_results, results_t
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
         if len(total_sent.split('\n')) < int(number):
-            total_sent += ('\n' if total_sent == '' else '') + 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                          ', I\'m afraid I cannot find enough ways ' + requestText + '.' +\
+            total_sent += ('\n' if total_sent == '' else '') + 'I\'m sorry Dave, I\'m afraid I cannot find enough ways ' + requestText + '.' +\
                           ' I could only find ' + str(len(total_sent.split('\n'))) + ' out of ' + str(number)
         return total_sent
     else:
-        return 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
-               ', I don\'t know how ' + requestText
+        return 'I\'m sorry Dave, I don\'t know how ' + requestText
