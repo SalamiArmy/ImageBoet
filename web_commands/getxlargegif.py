@@ -3,8 +3,8 @@ import main
 getgif = main.get_platform_command_code('telegram', 'getgif')
 
 
-def run(bot, chat_id, user, keyConfig, message, totalResults=1):
-    requestText = message.replace(bot.name, "").strip()
+def run(keyConfig, message, totalResults=1):
+    requestText = message.strip()
     args = {'cx': keyConfig.get('Google', 'GCSE_GIF_SE_ID1'),
             'key': keyConfig.get('Google', 'GCSE_APP_ID'),
             'searchType': "image",
@@ -13,4 +13,4 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             'fileType': 'gif',
             'start': 1,
             'imgSize': 'xlarge'}
-    return getgif.Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalResults)
+    return getgif.Send_Animated_Gifs(requestText, args, keyConfig, totalResults)
