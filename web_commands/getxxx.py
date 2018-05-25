@@ -120,7 +120,7 @@ def Send_XXXs(requestText, data, total_results, results_this_page, number, args)
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
         if len(total_sent) < int(number):
-            total_sent += 'I\'m sorry Dave, I\'m afraid I cannot find enough filth for ' + requestText + '.' +
+            total_sent += 'I\'m sorry Dave, I\'m afraid I cannot find enough filth for ' + requestText + '.' + \
                                                   ' I could only find ' + len(total_sent) + ' out of ' + str(number)
         return total_sent
     else:
