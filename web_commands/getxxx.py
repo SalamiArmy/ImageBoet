@@ -8,33 +8,32 @@ get = main.get_platform_command_code('telegram', 'get')
 CommandName = 'getxxx'
 
 class SeenXXX(ndb.Model):
-    # key name: get:str(chat_id)
-    allPreviousSeenXXX = ndb.StringProperty(indexed=False, default='')
+    allPreviousSeenXXX = ndb.BooleanProperty(indexed=False, default=False)
 
 
 # ================================
 
-def setPreviouslySeenXXXValue(chat_id, NewValue):
-    es = SeenXXX.get_or_insert(CommandName + ':' + str(chat_id))
-    es.allPreviousSeenXXX = NewValue.encode('utf-8')
+def setPreviouslySeenXXXValue(NewValue):
+    es = SeenXXX.get_or_insert(CommandName)
+    es.allPreviousSeenXXX = NewValue
     es.put()
 
-def addPreviouslySeenXXXValue(chat_id, NewValue):
-    es = SeenXXX.get_or_insert(CommandName + ':' + str(chat_id))
+def addPreviouslySeenXXXValue(NewValue):
+    es = SeenXXX.get_or_insert(CommandName)
     if es.allPreviousSeenXXX == '':
-        es.allPreviousSeenXXX = NewValue.encode('utf-8')
+        es.allPreviousSeenXXX = NewValue
     else:
-        es.allPreviousSeenXXX += ',' + NewValue.encode('utf-8')
+        es.allPreviousSeenXXX += ',' + NewValue
     es.put()
 
-def getPreviouslySeenXXXValue(chat_id):
-    es = SeenXXX.get_or_insert(CommandName + ':' + str(chat_id))
+def getPreviouslySeenXXXValue():
+    es = SeenXXX.get_or_insert(CommandName)
     if es:
         return es.allPreviousSeenXXX.encode('utf-8')
     return ''
 
-def wasPreviouslySeenXXX(chat_id, xxx_link):
-    allPreviousLinks = getPreviouslySeenXXXValue(chat_id)
+def wasPreviouslySeenXXX(xxx_link):
+    allPreviousLinks = getPreviouslySeenXXXValue()
     if ',' + xxx_link + ',' in allPreviousLinks or \
             allPreviousLinks.startswith(xxx_link + ',') or  \
             allPreviousLinks.endswith(',' + xxx_link) or  \
@@ -43,13 +42,13 @@ def wasPreviouslySeenXXX(chat_id, xxx_link):
     return False
 
 
-def run(bot, chat_id, user, keyConfig, message, totalResults=1):
-    requestText = message.replace(bot.name, "").strip()
+def run(keyConfig, message, totalResults=1):
+    requestText = message.strip()
     args, data, results_this_page, total_results = search_gcse_for_xxx(keyConfig, requestText)
     if totalResults > 1:
-        return Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, totalResults, args)
+        return Send_XXXs(requestText, data, total_results, results_this_page, totalResults, args)
     else:
-        return Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, results_this_page)
+        return Send_First_Valid_XXX(requestText, data, total_results, results_this_page)
 
 
 def search_gcse_for_xxx(keyConfig, requestText):
@@ -62,19 +61,16 @@ def search_gcse_for_xxx(keyConfig, requestText):
     return args, data, results_this_page, total_results
 
 
-def Send_First_Valid_XXX(bot, chat_id, user, requestText, data, total_results, results_this_page):
+def Send_First_Valid_XXX(requestText, data, total_results, results_this_page):
     if data['searchInformation']['totalResults'] >= '1':
         sent_count = 0
         for item in data['items']:
             xlink = item['link']
-            if is_valid_xxx(xlink) and not wasPreviouslySeenXXX(chat_id, xlink):
-                bot.sendMessage(chat_id=chat_id, text=(user + ', ' if not user == '' else '') + requestText + ': ' + xlink)
-                addPreviouslySeenXXXValue(chat_id, xlink)
+            if is_valid_xxx(xlink) and not wasPreviouslySeenXXX(xlink):
+                addPreviouslySeenXXXValue(xlink)
                 sent_count += 1
                 return [xlink]
-    errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-               ', you\'re just too filthy.'
-    bot.sendMessage(chat_id=chat_id, text=errorMsg)
+    errorMsg = 'I\'m sorry Dave, you\'re just too filthy.'
     return [errorMsg]
 
 
@@ -107,7 +103,7 @@ def is_valid_xxx(xlink):
            'search?search=' not in xlink
 
 
-def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
+def Send_XXXs(requestText, data, total_results, results_this_page, number, args):
     if data['searchInformation']['totalResults'] >= '1':
         total_sent = []
         total_offset = 0
@@ -115,10 +111,8 @@ def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this
             for item in data['items']:
                 xlink = item['link']
                 total_offset += 1
-                if is_valid_xxx(xlink) and not wasPreviouslySeenXXX(chat_id, xlink):
-                    bot.sendMessage(chat_id=chat_id, text=requestText + ' ' + str(len(total_sent)+1)
-                                                          + ' of ' + str(number) + ':' + xlink)
-                    addPreviouslySeenXXXValue(chat_id, xlink)
+                if is_valid_xxx(xlink) and not wasPreviouslySeenXXX(xlink):
+                    addPreviouslySeenXXXValue(xlink)
                     total_sent += xlink
                 if len(total_sent) >= int(number) or int(total_offset) >= int(total_results):
                     break
@@ -126,12 +120,9 @@ def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
         if len(total_sent) < int(number):
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I cannot find enough filth for ' + requestText + '.' +
-                                                  ' I could only find ' + len(total_sent) + ' out of ' + str(number))
+            total_sent += 'I\'m sorry Dave, I\'m afraid I cannot find enough filth for ' + requestText + '.' +
+                                                  ' I could only find ' + len(total_sent) + ' out of ' + str(number)
         return total_sent
     else:
-        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                   ', you\'re just too filthy.'
-        bot.sendMessage(chat_id=chat_id, text=errorMsg)
+        errorMsg = 'I\'m sorry Dave, you\'re just too filthy.'
         return [errorMsg]
