@@ -1,4 +1,4 @@
 import main
-getgif = main.get_platform_command_code('telegram', 'getgif')
-def run(bot, chat_id, user, keyConfig, message, totalResults=1):
-    return getgif.run(bot, chat_id, user, keyConfig, message, totalResults)
+getgif = main.get_platform_command_code('web', 'getgif')
+def run(keyConfig, message, totalResults=1):
+    return getgif.run(keyConfig, message, totalResults)
