@@ -20,8 +20,8 @@ class TestGet(unittest.TestCase):
         self.testbed.init_memcache_stub()
         self.testbed.init_user_stub()
         self.testbed.init_urlfetch_stub()
-        # Clear ndb's in-context cache between tests.
-        # This prevents data from leaking between tests.
+        # Clear ndb's in-context cache between telegram_tests.
+        # This prevents data from leaking between telegram_tests.
         # Alternatively, you could disable caching by
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
@@ -59,12 +59,12 @@ class TestGet(unittest.TestCase):
         getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 5)
 
     def test_getgif_group(self):
-        requestText = 'bot sucks cock'
+        requestText = 'thicc trap'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(['bot_keys.ini', '..\\bot_keys.ini'])
         bot = telegram.Bot(keyConfig.get('BotIDs', 'TESTING_TELEGRAM_BOT_ID'))
-        chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_GROUP_CHAT_ID')
+        chatId = keyConfig.get('BotAdministration', 'TESTING_TELEGRAM_ALT_GROUP_CHAT_ID')
 
         add.setTelegram_CommandCode('retry_on_telegram_error', open('../telegram_commands/retry_on_telegram_error.py').read())
         add.setTelegram_CommandCode('get', open('../telegram_commands/get.py').read())
@@ -72,4 +72,4 @@ class TestGet(unittest.TestCase):
         keyConfig.read(['keys.ini', '..\\keys.ini'])
 
         import telegram_commands.getgif as getgif
-        getgif.run(bot, chatId, 'Admin', keyConfig, requestText, 1)
+        getgif.run(bot, chatId, 'shaun420', keyConfig, requestText, 1)
