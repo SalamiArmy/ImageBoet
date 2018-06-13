@@ -255,7 +255,7 @@ def Send_Images(bot, chat_id, user, requestText, args, keyConfig, total_number_t
         else:
             errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
                        ', I\'m afraid I can\'t find any images for ' + \
-                       string.capwords(requestText.encode('utf-8'))
+                       str(requestText)
             bot.sendMessage(chat_id=chat_id, text=errorMsg)
             return [errorMsg]
 
@@ -280,6 +280,9 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
                 bot.sendMessage(chat_id, message)
                 total_sent.append(imagelink)
     if len(total_sent) < int(number) and int(total_offset) < int(total_results):
+        bot.sendMessage(chat_id=chat_id, text=
+                        'I\'m sorry ' + (user if not user == '' else 'Dave') +
+                        ', search is taking longer because I\'m looking even harder now.')
         args['start'] = total_offset + 1
         data, total_results, results_this_page = Google_Custom_Search(args)
         return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
