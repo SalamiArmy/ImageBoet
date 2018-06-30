@@ -36,7 +36,7 @@ def is_valid_gif(imagelink, chat_id):
         else:
             try:
                 gif.seek(1)
-            except EOFError:
+            except EOFError, ValueError:
                 pass
             else:
                 return int(sys.getsizeof(image_file)) < 10000000 and \
