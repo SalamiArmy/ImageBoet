@@ -279,7 +279,7 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
                           (str(len(total_sent) + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
                 bot.sendMessage(chat_id, message)
                 total_sent.append(imagelink)
-    if len(total_sent) < int(number) and int(total_offset) < int(total_results) and int(total_offset) < 100:
+    if len(total_sent) < int(number) and int(total_offset) < int(total_results) and int(total_offset) < 60:
         bot.sendMessage(chat_id=chat_id, text=
                         'I\'m sorry, search is taking longer because I\'m looking even harder now.')
         args['start'] = total_offset + 1
