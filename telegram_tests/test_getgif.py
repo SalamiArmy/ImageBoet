@@ -27,7 +27,7 @@ class TestGet(unittest.TestCase):
         ndb.get_context().clear_cache()
 
     def test_getgif(self):
-        requestText = 'look ash likes the gays'
+        requestText = 'catnip'
 
         keyConfig = ConfigParser.ConfigParser()
         keyConfig.read(['bot_keys.ini', '..\\bot_keys.ini'])
