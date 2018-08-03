@@ -74,11 +74,17 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalRe
                                                       '.'.encode('utf-8'))
         return total_sent
     else:
-        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                   ', I\'m afraid I can\'t find a gif for ' + \
-                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8')
-        bot.sendMessage(chat_id=chat_id, text=errorMsg)
-        return [errorMsg]
+        if 'error' in data:
+            errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
+                       data['error']['message']
+            bot.sendMessage(chat_id=chat_id, text=errorMsg)
+            return [errorMsg]
+        else:
+            errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                       ', I\'m afraid I can\'t find a gif for ' + \
+                       string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8')
+            bot.sendMessage(chat_id=chat_id, text=errorMsg)
+            return [errorMsg]
 
 def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig, user,
                           total_sent=[], total_offset=0):
