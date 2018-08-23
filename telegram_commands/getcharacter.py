@@ -1,6 +1,7 @@
 # coding=utf-8
 import json
 import urllib
+import uuid
 
 import main
 retry_on_telegram_error = main.get_platform_command_code('telegram', 'retry_on_telegram_error')
@@ -26,7 +27,8 @@ def run(bot, chat_id, user, keyConfig, message, total_requested_results=1):
                       ' the level ' + str(data['level']) + ' ' + \
                       ResolveRaceID(int(data['race'])) + ' ' + ResolveClassID(int(data['class'])) + \
                       ' is wearing level ' + str(data['items']['averageItemLevelEquipped']) + ' gear' + professionsText
-        imagelink = 'http://render-eu.worldofwarcraft.com/character/' + data['thumbnail'] + '?apikey=' + keyConfig.get('WOW', 'KEY')
+        imagelink = 'http://render-eu.worldofwarcraft.com/character/' + \
+                    str(data['thumbnail']).replace('-avatar', '-main') + '?uuid=' + str(uuid.uuid4())
         retry_on_telegram_error.SendPhotoWithRetry(bot, chat_id, imagelink, requestText)
         return requestText + '\n' + imagelink
     else:
