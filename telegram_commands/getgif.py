@@ -38,6 +38,8 @@ def is_valid_gif(imagelink, chat_id):
                 gif.seek(1)
             except EOFError:
                 pass
+            except ValueError:
+                pass
             else:
                 return int(sys.getsizeof(image_file)) < 10000000 and \
                        get.ImageHasUniqueHashDigest(image_file.getvalue(), chat_id)
@@ -72,11 +74,17 @@ def Send_Animated_Gifs(bot, chat_id, user, requestText, args, keyConfig, totalRe
                                                       '.'.encode('utf-8'))
         return total_sent
     else:
-        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
-                   ', I\'m afraid I can\'t find a gif for ' + \
-                   string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8')
-        bot.sendMessage(chat_id=chat_id, text=errorMsg)
-        return [errorMsg]
+        if 'error' in data:
+            errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
+                       data['error']['message']
+            bot.sendMessage(chat_id=chat_id, text=errorMsg)
+            return [errorMsg]
+        else:
+            errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') + \
+                       ', I\'m afraid I can\'t find a gif for ' + \
+                       string.capwords(requestText.encode('utf-8')) + '.'.encode('utf-8')
+            bot.sendMessage(chat_id=chat_id, text=errorMsg)
+            return [errorMsg]
 
 def search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig, user,
                           total_sent=[], total_offset=0):
@@ -97,7 +105,7 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
                 message = requestText + ': ' + (str(len(total_sent) + 1) + ' of ' + str(number) + '\n' if int(number) > 1 else '') + imagelink
                 bot.sendMessage(chat_id, message)
                 total_sent.append(imagelink)
-    if len(total_sent) < int(number) and int(total_offset) < int(total_results):
+    if len(total_sent) < int(number) and int(total_offset) < int(total_results) and int(total_offset) < 30:
         bot.sendMessage(chat_id=chat_id, text=
                         'I\'m sorry ' + (user if not user == '' else 'Dave') + \
                    ', search is taking longer because I\'m looking even deeper now.')
