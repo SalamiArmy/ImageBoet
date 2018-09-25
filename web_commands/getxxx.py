@@ -8,7 +8,7 @@ get = main.get_platform_command_code('telegram', 'get')
 CommandName = 'getxxx'
 
 class SeenXXX(ndb.Model):
-    allPreviousSeenXXX = ndb.BooleanProperty(indexed=False, default=False)
+    allPreviousSeenXXX = ndb.StringProperty(indexed=False, default='')
 
 
 # ================================
