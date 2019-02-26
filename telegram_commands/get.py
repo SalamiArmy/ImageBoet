@@ -1,6 +1,7 @@
 # coding=utf-8
 import hashlib
 import sys
+import random
 
 import logging
 
