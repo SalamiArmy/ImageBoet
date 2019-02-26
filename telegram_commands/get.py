@@ -21,11 +21,11 @@ retry_on_telegram_error = main.get_platform_command_code('telegram', 'retry_on_t
 
 CommandName = 'get'
 
-Fillers = ['Um, just need a sec, [[USERNAME]]',
-           'Uh huh, I think I just need more time before I can get back to you, [[USERNAME]].',
-           'Hmm, I have lots of results for you, [[USERNAME]], but you\'ve seen all of them already.',
-           'Huh, none of these results are suitable for you, [[USERNAME]]. I\'m going to keep looking!',
-           'OK, I think I\'ve almost found a good one for you [[USERNAME]].']
+Fillers = ['Um, just need a sec...',
+           'Uh huh, I think I just need more time before I can get back to you.',
+           'Hmm, I have lots of results for you, but you\'ve seen all of them already.',
+           'Huh, none of these results are suitable for you. I\'m going to keep looking!',
+           'OK, I think I\'ve almost found a good one for you.']
 
 class WhosSeenImageUrls(ndb.Model):
     # key name: ImageUrl
@@ -287,8 +287,7 @@ def search_results_walker(args, bot, chat_id, data, number, requestText, results
                 bot.sendMessage(chat_id, message)
                 total_sent.append(imagelink)
     if len(total_sent) < int(number) and int(total_offset) < int(total_results) and int(total_offset) < 30:
-        bot.sendMessage(chat_id=chat_id, text=
-                        'I\'m sorry, search is taking longer because I\'m looking even harder now.')
+        bot.sendMessage(chat_id=chat_id, text=random.choice(Fillers))
         args['start'] = total_offset + 1
         data, total_results, results_this_page = Google_Custom_Search(args)
         return search_results_walker(args, bot, chat_id, data, number, requestText, results_this_page, total_results, keyConfig,
