@@ -21,6 +21,12 @@ retry_on_telegram_error = main.get_platform_command_code('telegram', 'retry_on_t
 
 CommandName = 'get'
 
+Fillers = ['Um, just need a sec, [[USERNAME]]',
+           'Uh huh, I think I just need more time before I can get back to you, [[USERNAME]].',
+           'Hmm, I have lots of results for you, [[USERNAME]], but you\'ve seen all of them already.',
+           'Huh, none of these results are suitable for you, [[USERNAME]]. I\'m going to keep looking!',
+           'OK, I think I\'ve almost found a good one for you [[USERNAME]].']
+
 class WhosSeenImageUrls(ndb.Model):
     # key name: ImageUrl
     whoseSeenImage = ndb.StringProperty(indexed=False, default='')
