@@ -38,7 +38,7 @@ class WhosSeenHashDigests(ndb.Model):
 # ================================
 
 def addPreviouslySeenImagesValue(image_url, chat_id):
-    es = WhosSeenImageUrls.get_or_insert(image_url[:500])
+    es = WhosSeenImageUrls.get_or_insert(image_url[:499])
     if es.whoseSeenImage == '':
         es.whoseSeenImage = str(chat_id)
     else:
@@ -54,7 +54,7 @@ def addPreviouslySeenHashDigest(image_hash, chat_id):
     es.put()
 
 def getWhoseSeenImagesValue(image_link):
-    es = WhosSeenImageUrls.get_or_insert(image_link[:500])
+    es = WhosSeenImageUrls.get_or_insert(image_link[:499])
     if es:
         return str(es.whoseSeenImage)
     return ''
