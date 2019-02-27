@@ -54,7 +54,7 @@ def addPreviouslySeenHashDigest(image_hash, chat_id):
     es.put()
 
 def getWhoseSeenImagesValue(image_link):
-    es = WhosSeenImageUrls.get_or_insert(image_link)
+    es = WhosSeenImageUrls.get_or_insert(image_link[0:500])
     if es:
         return str(es.whoseSeenImage)
     return ''
