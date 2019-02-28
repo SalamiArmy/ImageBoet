@@ -256,7 +256,7 @@ def Send_Images(bot, chat_id, user, requestText, args, keyConfig, total_number_t
     else:
         if 'error' in data:
             errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
-                       data['error']['message']
+                       ', ' + data['error']['message']
             bot.sendMessage(chat_id=chat_id, text=errorMsg)
             return [errorMsg]
         else:
