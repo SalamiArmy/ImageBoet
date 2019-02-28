@@ -46,6 +46,11 @@ def wasPreviouslySeenXXX(chat_id, xxx_link):
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     requestText = message.replace(bot.name, "").strip()
     args, data, results_this_page, total_results = search_gcse_for_xxx(keyConfig, requestText)
+    if 'error' in data:
+        errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
+                   ' ' + data['error']['message']
+        bot.sendMessage(chat_id=chat_id, text=errorMsg)
+        return [errorMsg]
     if totalResults > 1:
         return Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, totalResults, args)
     else:
