@@ -25,7 +25,9 @@ Fillers = ['Um, just need a sec...',
            'Uh huh, I think I just need more time before I can get back to you.',
            'Hmm, I have lots of results for you, but you\'ve seen all of them already.',
            'Huh, none of these results are suitable for you. I\'m going to keep looking!',
-           'OK, I think I\'ve almost found a good one for you.']
+           'OK, I think I\'ve almost found a good one for you.',
+           'OK now you\'ve confused me.',
+           'Wait, hold on, stop. I need to catch my breath.']
 
 class WhosSeenImageUrls(ndb.Model):
     # key name: ImageUrl
