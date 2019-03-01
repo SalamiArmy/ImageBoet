@@ -107,12 +107,12 @@ def is_valid_xxx(xlink):
            'xhamster.com/stories/' not in xlink and \
            'xhamster.com/search/stories?q=' not in xlink and \
            'xhamster.com/user/' not in xlink and \
-           'xhamster.com/search?q=' not in xlink and \
            'xhamster.com/search/photos?q=' not in xlink and \
            'xhamster.com/photos/categories/' not in xlink and \
            'xhamster.com/blog/' not in xlink and \
            'xhamster.com/search/photos' not in xlink and \
            'xhamster.com/tags/' not in xlink and \
+           'xhamster.com/search?' not in xlink and \
            'redtube.com/pornstar/' not in xlink and \
            'redtube.com/?search=' not in xlink and \
            'motherless.com/term/' not in xlink and \
