@@ -13,7 +13,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             headers={'Authorization': 'Bearer ' + keyConfig.get('Twitter', 'TOCKEN')})
   data = json.loads(raw_data.content)
   if ('statuses' in data and len(data['statuses']) > 0):
-    bot.sendMessage(chat_id=chat_id, text=data['statuses'][0].text)
+    bot.sendMessage(chat_id=chat_id, text=data['statuses'][0]['text'])
     return True
   else:
     bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
