@@ -121,6 +121,7 @@ def is_valid_xxx(xlink):
            not xlink.endswith('/replies') and \
            'search?search=' not in xlink and \
            'youporn.com/porntags/' not in xlink and \
+           'youporn.com/category/' not in xlink and \
            'eporner.com/photo/' not in xlink and \
            'eporner.com/search/' not in xlink and \
            'eporner.com/search-photos/' not in xlink and \
