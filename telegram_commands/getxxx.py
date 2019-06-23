@@ -113,6 +113,7 @@ def is_valid_xxx(xlink):
            'xhamster.com/photos/categories/' not in xlink and \
            'xhamster.com/blog/' not in xlink and \
            'xhamster.com/search/photos' not in xlink and \
+           'xhamster.com/photos/gallery/' not in xlink and \
            'xhamster.com/tags/' not in xlink and \
            'xhamster.com/search?' not in xlink and \
            'xhamster.com/gay/' not in xlink and \
