@@ -137,7 +137,8 @@ def is_valid_xxx(xlink):
            'porntrex.com/search/' not in xlink and \
            'beeg.com/tag/' not in xlink and \
            'porntube.com/search?' not in xlink and \
-           'se.porn.com/videos/search?q=' not in xlink
+           'se.porn.com/videos/search?q=' not in xlink and \
+           'spankbang.com/s/' not in xlink
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
