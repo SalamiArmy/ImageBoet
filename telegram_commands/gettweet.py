@@ -13,7 +13,7 @@ class TwitterTokens(ndb.Model):
     twitterTokens = ndb.StringProperty(indexed=False, default='')
     
 def addTwitterToken(chat_id, token):
-    es = TwitterTokens.get_or_insert(chat_id)
+    es = TwitterTokens.get_or_insert(str(chat_id))
     es.twitterTokens = str(token)
     es.put()
     
