@@ -12,12 +12,13 @@ class TwitterTokens(ndb.Model):
     # key name: chat_id
     twitterTokens = ndb.StringProperty(indexed=False, default='')
     
-def addTwitterToken(token, chat_id):
+def addTwitterToken(chat_id, token):
     es = TwitterTokens.get_or_insert(char_id)
     es.twitterTokens = str(token)
     es.put()
     
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
+  addTwitterToken(chat_id, keyConfig.get('Twitter', 'TOCKEN'))
   requestText = str(message).replace(bot.name, "").strip()
   raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/search/tweets.json?q=' + requestText,
             headers={'Authorization': 'Bearer ' + keyConfig.get('Twitter', 'TOCKEN')})
