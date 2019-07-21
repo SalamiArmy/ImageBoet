@@ -18,7 +18,7 @@ def setTwitterToken(chat_id, token):
     es.put()
 
 def getTwitterToken(chat_id):
-    es = TwitterToken.get_or_insert(chat_id)
+    es = TwitterToken.get_or_insert(str(chat_id))
     if es:
         return str(es.twitterToken)
     return ''
