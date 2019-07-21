@@ -26,7 +26,7 @@ def getTwitterToken(chat_id):
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
   requestText = str(message).replace(bot.name, "").strip()
   getToken = getTwitterToken(chat_id)
-  if !getToken:
+  if (getToken == ""):
     setTwitterToken(chat_id, requestText)
   raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/search/tweets.json?q=' + requestText,
             headers={'Authorization': 'Bearer ' + getToken})
