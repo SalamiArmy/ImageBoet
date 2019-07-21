@@ -8,23 +8,33 @@ import json
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 
-class TwitterTokens(ndb.Model):
+class TwitterToken(ndb.Model):
     # key name: chat_id
-    twitterTokens = ndb.StringProperty(indexed=False, default='')
+    twitterToken = ndb.StringProperty(indexed=False, default='')
     
-def addTwitterToken(chat_id, token):
-    es = TwitterTokens.get_or_insert(str(chat_id))
-    es.twitterTokens = str(token)
+def setTwitterToken(chat_id, token):
+    es = TwitterToken.get_or_insert(str(chat_id))
+    es.twitterToken = str(token)
     es.put()
+
+def getTwitterToken(chat_id):
+    es = TwitterToken.get_or_insert(chat_id)
+    if es:
+        return str(es.twitterToken)
+    return ''
     
 def run(bot, chat_id, user, keyConfig, message, totalResults=1):
-  addTwitterToken(chat_id, keyConfig.get('Twitter', 'TOCKEN'))
   requestText = str(message).replace(bot.name, "").strip()
+  getToken = getTwitterToken(chat_id)
+  if !getToken:
+    setTwitterToken(chat_id, requestText)
   raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/search/tweets.json?q=' + requestText,
-            headers={'Authorization': 'Bearer ' + keyConfig.get('Twitter', 'TOCKEN')})
+            headers={'Authorization': 'Bearer ' + getToken})
   data = json.loads(raw_data.content)
   if ('statuses' in data and len(data['statuses']) > 0):
-    bot.sendMessage(chat_id=chat_id, text=data['statuses'][0]['text'])
+    bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
+                                                      data['statuses'][0]['text'])
+    setTwitterToken(chat_id, "")
     return True
   else:
     bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
