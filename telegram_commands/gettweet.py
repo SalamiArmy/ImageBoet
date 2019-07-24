@@ -32,7 +32,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
             headers={'Authorization': 'Bearer ' + getToken})
   getContent = raw_data.content
   print(getContent)
-  data = json.loads()
+  data = json.loads(getContent)
   if ('statuses' in data and len(data['statuses']) > 0):
     bot.sendMessage(chat_id=chat_id, text=data['statuses'][0]['text'])
   else:
