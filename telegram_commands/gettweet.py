@@ -1,6 +1,5 @@
 # coding=utf-8
 import sys
-import logging
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -33,12 +32,11 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
       raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/search/tweets.json?q=' + requestText,
                 headers={'Authorization': 'Bearer ' + getToken})
       getContent = raw_data.content
-      logging.info(getContent)
       data = json.loads(getContent)
       if ('errors' in data and len (data['errors']) > 0):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                              data['errors'][0]['message'] + 
-                       ('\nTry sending a valid twitter token first.' if data['errors'][0]['message']=='Invalid or expired token.' else ''))
+                                                              ',\n' + data['errors'][0]['message'].replace('.', ':') + 
+            ('\n' + getToken + '\nTry sending a valid twitter token first.' if data['errors'][0]['message']=='Invalid or expired token.' else ''))
         setTwitterToken(chat_id, "")
       else:
           if ('statuses' in data and len(data['statuses']) > 0):
