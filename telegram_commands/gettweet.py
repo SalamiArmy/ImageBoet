@@ -1,5 +1,6 @@
 # coding=utf-8
 import sys
+import logging
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -31,7 +32,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
   raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/search/tweets.json?q=' + requestText,
             headers={'Authorization': 'Bearer ' + getToken})
   getContent = raw_data.content
-  print(getContent)
+  logging.info(getContent)
   data = json.loads(getContent)
   if ('statuses' in data and len(data['statuses']) > 0):
     bot.sendMessage(chat_id=chat_id, text=data['statuses'][0]['text'])
