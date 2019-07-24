@@ -37,7 +37,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
   if ('errors' in data and len (data['errors']) > 0):
     bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                           data['errors'][0]['message'] + 
-                   ('\nTry sending a valid twitter token first.' if data['data'][0]['message']=='Invalid or expired token.' else ''))
+                   ('\nTry sending a valid twitter token first.' if data['errors'][0]['message']=='Invalid or expired token.' else ''))
     setTwitterToken(chat_id, "")
   else:
       if ('statuses' in data and len(data['statuses']) > 0):
