@@ -89,6 +89,7 @@ def is_valid_xxx(xlink):
            'xvideos.com/?k=' not in xlink and \
            'xvideos.com/tags' not in xlink and \
            'xvideos.com/profiles/' not in xlink and \
+           'xvideos.com/pornstars/' not in xlink and \
            'pornhub.com/users/' not in xlink and \
            'pornhub.com/video/search?search=' not in xlink and \
            'pornhub.com/insights/' not in xlink and \
