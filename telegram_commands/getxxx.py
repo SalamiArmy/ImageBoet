@@ -131,6 +131,7 @@ def is_valid_xxx(xlink):
            'eporner.com/photo/' not in xlink and \
            'eporner.com/search/' not in xlink and \
            'eporner.com/search-photos/' not in xlink and \
+           'eporner.com/buscar-fotos/roll/' not in xlink and \
            'orgasm.com/free-porn-blog/' not in xlink and \
            'porntrex.com/tags/' not in xlink and \
            'porn.com/pics/search?' not in xlink and \
