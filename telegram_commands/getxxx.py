@@ -101,6 +101,7 @@ def is_valid_xxx(xlink):
            'pornhub.com/partners/' not in xlink and \
            'pornhub.com/playlist/' not in xlink and \
            'pornhub.com/model/' not in xlink and \
+           'pornhub.com/blog/' not in xlink and \
            'xnxx.com/?' not in xlink and \
            'xnxx.com/search/' not in xlink and \
            'xnxx.com/tags/' not in xlink and \
