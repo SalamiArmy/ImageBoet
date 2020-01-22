@@ -132,6 +132,7 @@ def is_valid_xxx(xlink):
            'youporn.com/category/' not in xlink and \
            'youporn.com/channel/' not in xlink and \
            'youporn.com/search/?query=' not in xlink and \
+           'eporner.com/gifs/' not in xlink and \
            'eporner.com/photo/' not in xlink and \
            'eporner.com/search/' not in xlink and \
            'eporner.com/search-photos/' not in xlink and \
