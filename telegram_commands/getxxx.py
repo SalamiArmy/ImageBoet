@@ -125,6 +125,7 @@ def is_valid_xxx(xlink):
            'xhamster.com/info/' not in xlink and \
            'redtube.com/pornstar/' not in xlink and \
            'redtube.com/?search=' not in xlink and \
+           'redtube.com/gay?search=' not in xlink and \
            'motherless.com/term/' not in xlink and \
            'motherless.com/groups/member/' not in xlink and \
            not xlink.endswith('/replies') and \
