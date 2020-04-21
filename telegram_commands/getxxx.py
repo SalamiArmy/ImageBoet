@@ -160,7 +160,8 @@ def is_valid_xxx(xlink):
            'xvideos.com/models/' not in xlink and \
            'tube8.com/cat/' not in xlink and \
            'tube8.com/searches.html?q=' not in xlink and \
-           'xhamster.com/pornstars/' not in xlink
+           'xhamster.com/pornstars/' not in xlink and \
+           not ('heavy-r.com' in xlink and xlink.endswith('.html'))
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
