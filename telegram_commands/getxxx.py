@@ -163,6 +163,7 @@ def is_valid_xxx(xlink):
            'tube8.com/searches.html?q=' not in xlink and \
            'xhamster.com/pornstars/' not in xlink and \
            'xhamster.com/photos/search/' not in xlink and \
+           'xhamster.com/search/' not in xlink and \
            not ('heavy-r.com' in xlink and xlink.endswith('.html'))
 
 
