@@ -164,7 +164,8 @@ def is_valid_xxx(xlink):
            'xhamster.com/pornstars/' not in xlink and \
            'xhamster.com/photos/search/' not in xlink and \
            'xhamster.com/search/' not in xlink and \
-           not ('heavy-r.com' in xlink and xlink.endswith('.html'))
+           not ('heavy-r.com' in xlink and xlink.endswith('.html')) and /
+           'pornhub.com/pornstars?' not in xlink
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
