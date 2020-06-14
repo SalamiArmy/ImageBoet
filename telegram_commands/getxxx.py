@@ -169,6 +169,7 @@ def is_valid_xxx(xlink):
            'pornhub.com/blog' not in xlink and \
            'xhamster.com/creator-signup' not in xlink and \
            'pornhub.com/content_partner_guide' not in xlink and \
+           'pornhub.com/sex/' not in xlink and \
            'xvideos.com/c/' not in xlink and \
            'heavy-r.com/shocking_videos/recent/' not in xlink
 
