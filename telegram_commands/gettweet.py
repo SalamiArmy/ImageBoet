@@ -1,5 +1,6 @@
 # coding=utf-8
 import sys
+import logging
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -40,6 +41,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
                             ('\n' + getToken + '\nTry sending a valid twitter token with /settweet.' if data['errors'][0]['message']=='Invalid or expired token.' else ''))
         else:
             if ('statuses' in data and len(data['statuses']) > 0):
+                logging.info('sending Twitter tweet from this raw data: ' + str(data))
                 bot.sendMessage(chat_id=chat_id, text=data['statuses'][0]['text'])
                 return True
             else:
