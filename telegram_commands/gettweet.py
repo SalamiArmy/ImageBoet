@@ -32,17 +32,20 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
                         ', no token set. Try sending a valid twitter token with /settweet.')
     else:
         raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/search/tweets.json?q=' + requestText.replace(" ", "%20"),
-                                  headers={'Authorization': 'Bearer ' + getToken})
-        getContent = raw_data.content
-        data = json.loads(getContent)
+                                  headers={'Authorization': 'Bearer ' + getToken}).content
+        data = json.loads(raw_data)
         if ('errors' in data and len (data['errors']) > 0):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                             ',\n' + data['errors'][0]['message'].replace('.', ':') + 
                             ('\n' + getToken + '\nTry sending a valid twitter token with /settweet.' if data['errors'][0]['message']=='Invalid or expired token.' else ''))
         else:
             if ('statuses' in data and len(data['statuses']) > 0):
-                logging.info('sending Twitter tweet from this raw data: ' + str(data))
                 bot.sendMessage(chat_id=chat_id, text=data['statuses'][0]['text'])
+                if ('retweeted_status' in data['statuses'][0]):
+                    raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/statuses/show.json?id=' + data['statuses'][0]['retweeted_status']['id_str'],
+                                              headers={'Authorization': 'Bearer ' + getToken}).content
+                    retweet_data = json.loads(raw_data)
+                    logging.info('found some retweet data: ' + str(retweet_data))
                 return True
             else:
                 bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
