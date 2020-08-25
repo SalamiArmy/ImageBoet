@@ -143,6 +143,7 @@ def is_valid_xxx(xlink):
            'youporn.com/search/?query=' not in xlink and \
            'youporn.com/contentpartnerprogram' not in xlink and \
            'youporn.com/pornstar/' not in xlink and \
+           'youporn.com/country/' not in xlink and \
            'eporner.com/gifs/' not in xlink and \
            'eporner.com/photo/' not in xlink and \
            'eporner.com/search/' not in xlink and \
