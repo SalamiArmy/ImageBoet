@@ -163,6 +163,7 @@ def is_valid_xxx(xlink):
            'spankbang.com/s/' not in xlink and \
            'xnxx.com/pornstar/' not in xlink and \
            'xvideos.com/models/' not in xlink and \
+           'xvideos.com/amateur-channels/' not in xlink and \
            'tube8.com/cat/' not in xlink and \
            'tube8.com/searches.html?q=' not in xlink and \
            'xhamster.com/pornstars/' not in xlink and \
