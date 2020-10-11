@@ -41,7 +41,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
         else:
             if ('statuses' in data and len(data['statuses']) > 0):
                 bot.sendMessage(chat_id=chat_id, text=data['statuses'][0]['user']['name'] + ':\n\"' + 
-                                data['statuses'][0]['text'] + '\"\n' + data['statuses'][0]['retweet_count'] + ' retweets\n' + data['statuses'][0]['favorite_count'] + ' likes\nhttps://twitter.com/' + data['statuses'][0]['user']['screen_name'] + 
+                                data['statuses'][0]['text'] + '\"\n' + str(data['statuses'][0]['retweet_count']) + ' retweets\n' + str(data['statuses'][0]['favorite_count']) + ' likes\nhttps://twitter.com/' + data['statuses'][0]['user']['screen_name'] + 
                                 '/status/' + data['statuses'][0]['id_str'])
                 if ('retweeted_status' in data['statuses'][0]):
                     raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/statuses/show.json?id=' + data['statuses'][0]['retweeted_status']['id_str'],
