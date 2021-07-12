@@ -31,7 +31,8 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
         bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                         ', no token set. Try sending a valid twitter token with /settweet.')
     else:
-        raw_data = urlfetch.fetch(url='https://api.twitter.com/1.1/search/tweets.json?q=' + requestText.replace(" ", "%20"),
+        fetch_url = 'https://api.twitter.com/1.1/search/tweets.json?q=' + requestText.replace(" ", "%20")
+        raw_data = urlfetch.fetch(url=fetch_url,
                                   headers={'Authorization': 'Bearer ' + getToken}).content
         try:
             data = json.loads(raw_data)
@@ -55,5 +56,8 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
                                     ', I\'m afraid I can\'t find any Twitter Tweets for ' +
                                     requestText)
         except ValueError:
-            bot.sendMessage(chat_id=chat_id, text=raw_data)
+            if (raw_data != ""):
+                bot.sendMessage(chat_id=chat_id, text=raw_data)
+            else:
+                bot.sendMessage(chat_id=chat_id, text='twitter api url returned nothing: ' + fetch_url)
     return False
