@@ -179,6 +179,7 @@ def is_valid_xxx(xlink):
            'heavy-r.com/shocking_videos/recent/' not in xlink and \
            'pornhub.com/video?c=' not in xlink and \
            'spankbang.com/pornstar/' not in xlink and \
+           'tnaflix.com/search.php?what=' not in xlink and \
            'xvideos.com/pornstar-channels/' not in xlink
 
 
