@@ -205,8 +205,7 @@ def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
         if len(total_sent) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
-                                                  ', I\'m afraid I cannot find enough filth for ' + requestText + '.' +
-                                                  ' I could only find ' + len(total_sent) + ' out of ' + number)
+                                                  ', I\'m afraid I cannot find enough filth for ' + requestText + '.')
         return total_sent
     else:
         errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
