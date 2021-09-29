@@ -206,7 +206,7 @@ def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this
         if len(total_sent) < int(number):
             bot.sendMessage(chat_id=chat_id, text='I\'m sorry ' + (user if not user == '' else 'Dave') +
                                                   ', I\'m afraid I cannot find enough filth for ' + requestText + '.' +
-                                                  ' I could only find ' + len(total_sent) + ' out of ' + int(number))
+                                                  ' I could only find ' + len(total_sent) + ' out of ' + number)
         return total_sent
     else:
         errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
