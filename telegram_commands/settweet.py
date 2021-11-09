@@ -1,6 +1,6 @@
 # coding=utf-8
 import sys
-
+import main
 reload(sys)
 sys.setdefaultencoding('utf8')
 import json
