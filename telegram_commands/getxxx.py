@@ -183,6 +183,7 @@ def is_valid_xxx(xlink):
            'xvideos.com/pornstar-channels/' not in xlink and \
            'anysex.com/search/?q=' not in xlink and \
            'xxxbunker.com/search/' not in xlink and \
+           '/search.php?what=' not in xlink and \
            'xnxx.com/hits/' not in xlink
 
 
