@@ -161,31 +161,32 @@ def is_valid_xxx(xlink):
            'beeg.com/tag/' not in xlink and \
            'se.porn.com/videos/search?q=' not in xlink and \
            'spankbang.com/s/' not in xlink and \
+           'spankbang.com/pornstar/' not in xlink and \
            'xnxx.com/pornstar/' not in xlink and \
+           'xnxx.com/hits/' not in xlink and \
            'xvideos.com/models/' not in xlink and \
            'xvideos.com/amateur-channels/' not in xlink and \
+           'xvideos.com/c/' not in xlink and \
+           'xvideos.com/pornstar-channels/' not in xlink and \
            'tube8.com/cat/' not in xlink and \
            'tube8.com/searches.html?q=' not in xlink and \
            'xhamster.com/pornstars/' not in xlink and \
            'xhamster.com/photos/search/' not in xlink and \
            'xhamster.com/search/' not in xlink and \
+           'xhamster.com/shemale/categories/' not in xlink and \
+           'xhamster.com/creator-signup' not in xlink and \
            not ('heavy-r.com' in xlink and xlink.endswith('.html')) and \
            'pornhub.com/pornstars?' not in xlink and \
            'pornhub.com/blog' not in xlink and \
-           'xhamster.com/creator-signup' not in xlink and \
            'pornhub.com/content_partner_guide' not in xlink and \
            'pornhub.com/sex/' not in xlink and \
-           'xvideos.com/c/' not in xlink and \
-           'heavy-r.com/shocking_videos/recent/' not in xlink and \
            'pornhub.com/video?c=' not in xlink and \
-           'spankbang.com/pornstar/' not in xlink and \
+           'heavy-r.com/shocking_videos/recent/' not in xlink and \
            'tnaflix.com/search.php?what=' not in xlink and \
-           'xvideos.com/pornstar-channels/' not in xlink and \
            'anysex.com/search/?q=' not in xlink and \
            'xxxbunker.com/search/' not in xlink and \
            '/search.php?what=' not in xlink and \
-           'xnxx.com/hits/' not in xlink and \
-           'xhamster.com/shemale/categories/' not in xlink
+           'nuvid.com/story/' not in xlink
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
