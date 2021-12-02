@@ -93,6 +93,10 @@ def is_valid_xxx(xlink):
            'xvideos.com/channels/' not in xlink and \
            'xvideos.com/model-channels/' not in xlink and \
            'xvideos.com/c/month/' not in xlink and \
+           'xvideos.com/models/' not in xlink and \
+           'xvideos.com/amateur-channels/' not in xlink and \
+           'xvideos.com/c/' not in xlink and \
+           'xvideos.com/pornstar-channels/' not in xlink and \
            'pornhub.com/users/' not in xlink and \
            'pornhub.com/video/search?search=' not in xlink and \
            'pornhub.com/insights/' not in xlink and \
@@ -164,10 +168,6 @@ def is_valid_xxx(xlink):
            'spankbang.com/pornstar/' not in xlink and \
            'xnxx.com/pornstar/' not in xlink and \
            'xnxx.com/hits/' not in xlink and \
-           'xvideos.com/models/' not in xlink and \
-           'xvideos.com/amateur-channels/' not in xlink and \
-           'xvideos.com/c/' not in xlink and \
-           'xvideos.com/pornstar-channels/' not in xlink and \
            'tube8.com/cat/' not in xlink and \
            'tube8.com/searches.html?q=' not in xlink and \
            'xhamster.com/pornstars/' not in xlink and \
@@ -186,7 +186,8 @@ def is_valid_xxx(xlink):
            'anysex.com/search/?q=' not in xlink and \
            'xxxbunker.com/search/' not in xlink and \
            '/search.php?what=' not in xlink and \
-           'nuvid.com/story/' not in xlink
+           'nuvid.com/story/' not in xlink and \
+           'tube8.com/shemale/searches.html?q=' not in xlink
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
