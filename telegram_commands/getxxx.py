@@ -187,7 +187,8 @@ def is_valid_xxx(xlink):
            'xxxbunker.com/search/' not in xlink and \
            '/search.php?what=' not in xlink and \
            'nuvid.com/story/' not in xlink and \
-           'tube8.com/shemale/searches.html?q=' not in xlink
+           'tube8.com/shemale/searches.html?q=' not in xlink and \
+           'xhamster.com/shemale/tags/' not in xlink
 
 
 def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this_page, number, args):
