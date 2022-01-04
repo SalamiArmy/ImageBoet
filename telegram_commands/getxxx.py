@@ -133,6 +133,7 @@ def is_valid_xxx(xlink):
            'xhamster.com/gay/' not in xlink and \
            'xhamster.com/info/' not in xlink and \
            'xhamster.com/celebrities/' not in xlink and \
+           'xhamster.com/shemale/' not in xlink and \
            'redtube.com/pornstar/' not in xlink and \
            'redtube.com/?search=' not in xlink and \
            'redtube.com/gay?search=' not in xlink and \
@@ -173,7 +174,6 @@ def is_valid_xxx(xlink):
            'xhamster.com/pornstars/' not in xlink and \
            'xhamster.com/photos/search/' not in xlink and \
            'xhamster.com/search/' not in xlink and \
-           'xhamster.com/shemale/categories/' not in xlink and \
            'xhamster.com/creator-signup' not in xlink and \
            not ('heavy-r.com' in xlink and xlink.endswith('.html')) and \
            'pornhub.com/pornstars?' not in xlink and \
