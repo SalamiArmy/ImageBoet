@@ -210,7 +210,7 @@ def Send_XXXs(bot, chat_id, user, requestText, data, total_results, results_this
                 args['start'] = total_offset+1
                 data, total_results, results_this_page = get.Google_Custom_Search(args)
         if len(total_sent) >= int(number):
-            bot.sendMessage(chat_id=chat_id, text='I\'m sorry, I have failed')
+            bot.sendMessage(chat_id=chat_id, text='I\'m sorry, I have failed you.')
         return total_sent
     else:
         errorMsg = 'I\'m sorry ' + (user if not user == '' else 'Dave') +\
