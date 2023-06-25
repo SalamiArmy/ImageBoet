@@ -14,6 +14,7 @@ def run(bot, chat_id, user, keyConfig, message, totalResults=1):
     apiKey = '&api_key=dc6zaTOxFJmzC&limit=10&offset=0'
     realUrl = giphyUrl + requestText + apiKey
     data = json.load(urllib.urlopen(realUrl))
+    bot.sendMessage(chat_id=chat_id, text=json.dumps(data))
     if data['pagination']['total_count'] >= 1:
         imagelink = data['data'][random.randint(0, len(data['data']) - 1)]['images']['original']['url']
         bot.sendChatAction(chat_id=chat_id, action=telegram.ChatAction.UPLOAD_DOCUMENT)
